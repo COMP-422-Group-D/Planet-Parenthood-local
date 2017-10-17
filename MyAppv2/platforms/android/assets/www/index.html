@@ -49,8 +49,10 @@
 <!--            <div class="white_labels "> Planet Parenthood</div>-->
             <img class="game-name" src="media/images/game_name.png"> 
 
-				<form method="post" action="menu.html" name='login' class="form-group">
-
+                    <br> <br>
+                    <div class="login">
+			<form method="post" action="../index.html" name='login' class="form-group">
+                        
 				<p><input type="text" name="login" value="" placeholder="Username or Email"></p>
 				<p><input type="password" name="password" value="" placeholder="Password"></p>
 				<p class="remember_me">
@@ -59,7 +61,7 @@
 							Remember me on this Device
 					</label>
 				</p>
-				<p class="submit"><input type="submit" name="commit" onclick="check(this.form)" value="Login"></p>
+				<p class="submit"><input type="submit" name="commit" onclick="check(this.form)" value="login"></p>
 
 	<!--
 					<div class = "box" >
@@ -68,11 +70,18 @@
 	-->
 
 			</form>
-			
+            </div>
 			
 			<div class="login-help">
 			<a href="html/register.html">Create an Account</a>
 			</div>
+                <!--  remove this later          -->
+            <div class="login-help">
+			<a href="html/menu.html">Go to menu</a>
+			</div>
+            <!--  End remove          -->
+
+            
 		</div>
 <!--
                         <div data-role="page">

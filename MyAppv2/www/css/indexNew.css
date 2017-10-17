@@ -7,11 +7,18 @@ body {
     -webkit-touch-callout: none;                /* prevent callout to copy image, etc when tap to hold */
     -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
     -webkit-user-select: none;                  /* prevent copy paste, to allow, change 'none' to 'text' */
+    
+    background-image:url("../media/images/sp4.gif");
+/*    background-repeat: no-repeat;*/
+   
+/*
     background-color: rgb(157, 34, 60);
   background-image: -webkit-linear-gradient(135deg, rgb(114, 51, 98), rgb(157, 34, 60));
   background-image: -moz-linear-gradient(135deg, rgb(114, 51, 98), rgb(157, 34, 60));
   background-image: -o-linear-gradient(135deg, rgb(114, 51, 98), rgb(157, 34, 60));
   background-image: linear-gradient(135deg, rgb(114, 51, 98), rgb(157, 34, 60));
+*/
+        
  height: 100%;
  width: 100%;
  font: 13px/20px Verdana, sans-serif;
@@ -60,7 +67,9 @@ footer.loginFooter {
     margin-bottom: 20px;
     width:30%;
 }
-
+.login {
+  margin-top: 15px;
+}
 .login p {
   margin: 20px 0 0;
 }
@@ -69,14 +78,18 @@ footer.loginFooter {
 }
 .login input[type=text], .login input[type=password] {
   width: 278px;
+  padding-left: 10px;
 }
 .login p.remember_me {
   line-height: 31px;
+
 }
 .login p.remember_me label {
   font-size: 12px;
   color: white;
   cursor: pointer;
+  margin-bottom: 5px;
+
 }
 .login p.remember_me input {
   position: relative;
@@ -85,6 +98,7 @@ footer.loginFooter {
   vertical-align: middle;
 }
 .login p.submit input{
+    margin-top: 10px;
   width: 20%;
 /*  display: block;*/
   background: #fff;
@@ -102,7 +116,7 @@ footer.loginFooter {
 
 .login-help {
   margin: 20px 0;
-  font-size: 11px;
+  font-size: 12px;
   color: white;
   text-align: center;
   text-shadow: 0 1px #2a85a1;
@@ -118,7 +132,7 @@ footer.loginFooter {
 .login-image {
     width:300px;
     height:150px;
-    margin-top:30px;
+    margin-top:80px;
     margin-bottom: 30px;
     padding-top: 18px;
 /*    transform: rotate(352.49deg);*/
