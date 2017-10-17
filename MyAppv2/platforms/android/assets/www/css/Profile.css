@@ -20,6 +20,7 @@ body {
     overflow: hidden;
 }
 */
+
 .card-img-top{
     height:200px;
     width:200px;
@@ -39,11 +40,11 @@ body {
 */
   color: rgb(255,255,255);
   display: block;
-  font-size: .85rem;
+  font-size: 1.2rem;
   font-weight: 500;
         height: 60px;
         letter-spacing: .5rem;
-        line-height: 60px;
+        line-height: 50px;
         text-shadow: 0 1px 1px rgba(0,0,0,.1);
         text-transform: uppercase;
         transition: all .1s ease;
