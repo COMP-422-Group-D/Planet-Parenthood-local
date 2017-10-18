@@ -45,19 +45,24 @@ nav.vertical > ul > li {
   display: block;
 }
 .welcome {
+/*
   background-color: rgb(157, 34, 60);
   background-image: -webkit-linear-gradient(135deg, rgb(114, 51, 98), rgb(157, 34, 60));
   background-image: -moz-linear-gradient(135deg, rgb(114, 51, 98), rgb(157, 34, 60));
   background-image: -o-linear-gradient(135deg, rgb(114, 51, 98), rgb(157, 34, 60));
   background-image: linear-gradient(135deg, rgb(114, 51, 98), rgb(157, 34, 60));
   border-bottom: 1px solid rgba(255,255,255,.1);
+*/
+    
+    background-image:url("../media/images/sp4.gif");
+    
   color: rgb(255,255,255);
   display: block;
   font-size: .85rem;
   font-weight: 500;
         height: 60px;
         letter-spacing: .5rem;
-        line-height: 60px;
+/*        line-height: 60px;*/
         text-shadow: 0 1px 1px rgba(0,0,0,.1);
         text-transform: uppercase;
         transition: all .1s ease;

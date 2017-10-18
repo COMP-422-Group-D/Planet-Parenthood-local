@@ -1,17 +1,17 @@
-    <html>
-		<head>
-			<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
-			<link rel="stylesheet" type="text/css" href="bs/css/bootstrap.min.css">
-			<link rel="stylesheet" type="text/css" href="bs/css/bootstrap-grid.min.css">
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+    <link rel="stylesheet" type="text/css" href="bs/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="bs/css/bootstrap-grid.min.css">
         
 
-        	<link rel="stylesheet" type="text/css" href="../css/Profile.css">
+        <link rel="stylesheet" type="text/css" href="../css/Profile.css">
 
-        	<title>Settings</title>
-		</head>
-
+        <title>Settings</title>
         
     <body>
+        <audio id="ss" autoplay loop>
+    <source id="ss1" src="../media/audio/menu.wav" type="audio/wav">
+    Your browser does not support the audio tag.
+  </audio>
         <div class= "header">
         <p >Settings</p>
   </div>
@@ -34,7 +34,7 @@
                   <br>
                     <span class="SettingToggle2">Sounds</span>
                         <label class="switch">
-                            <input type="checkbox">
+                            <input type="checkbox" onclick="document.getElementById('ss').muted = !document.getElementById('ss').muted;$(this).toggleClass('mute')">
                             <span class="slider round"></span>
                         </label>
                             <h3 class="SettingToggle">Language</h3>
@@ -44,20 +44,41 @@
            
 
           </div>  
-				</div>
-			</div>
-		
-              <form method="post" action="../index.html" name='login' class="form-group">
+                <form method="post" action="../index.html" name='login' class="form-group">
                 
                    
         <div class="submit"><input type="submit" name="commit" onclick="check(this.form)" value="Logout"></div>
          
-      			</form>
+              
+     
+                    
+      </form>
+                <!--   remove this                 -->
+                    <button name="b1" value="test" onclick="msg()">TEST</button>
+                    <button name="b1" value="test2" onclick="document.getElementById('ss1'); audioElm.muted = !audioElm.muted;">TEST2</button>
+
+
+               <!--  End remove this   -->
+                <a href="menu.html">go menu</a>
         </div>
         
         
          <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
-</body>
-</html>
+           
+                
+                
+        <!--   I added this               -->
+                <script type="text/javascript">
+                
+                function msg()
+                    {
+                        Array.prototype.slice.call(document.querySelectorAll('audio')).forEach(function(audio) {
+    audio.muted = true;
+});
+                       // alert("testin is working")
+                    }
+                </script>
+        
+        </div></div></body>

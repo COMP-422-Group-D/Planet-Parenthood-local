@@ -9,28 +9,42 @@ html {
 
     height: 100%;
     width: 100%;
-
     font: 13px/20px Verdana, sans-serif;
     text-align: center;
+}
+/*
+body {
+     height: 100%;
+    width: 100%;
+    background-color: rgba(151, 109, 208, 0.70);
+    overflow: hidden;
+}
+*/
 
-
+.card-img-top{
+    height:200px;
+    width:200px;
+    margin:auto;
 }
 
-
 .header{
+    
+    background-image:url("../media/images/sp4.gif");
+/*
   background-color: rgb(157, 34, 60);
   background-image: -webkit-linear-gradient(135deg, rgb(114, 51, 98), rgb(157, 34, 60));
   background-image: -moz-linear-gradient(135deg, rgb(114, 51, 98), rgb(157, 34, 60));
   background-image: -o-linear-gradient(135deg, rgb(114, 51, 98), rgb(157, 34, 60));
   background-image: linear-gradient(135deg, rgb(114, 51, 98), rgb(157, 34, 60));
   border-bottom: 1px solid rgba(255,255,255,.1);
+*/
   color: rgb(255,255,255);
   display: block;
-  font-size: .85rem;
+  font-size: 1.2rem;
   font-weight: 500;
         height: 60px;
         letter-spacing: .5rem;
-        line-height: 60px;
+        line-height: 50px;
         text-shadow: 0 1px 1px rgba(0,0,0,.1);
         text-transform: uppercase;
         transition: all .1s ease;
@@ -39,14 +53,24 @@ html {
         margin-bottom: 20px;
 }
 
-/*
 
+/*
 .container-fluid {
     text-align:center;
-	height: 100%;
+  height: 100%;
     width: 100%;
+    margin:auto;
+
 }
 */
+/*
+.MasterContainer{
+    height:100%;
+    width:100%;
+}
+*/
+
+
 .card{
     
 /*    background:url(../media/images/spacebackground.jpg);*/
@@ -57,22 +81,16 @@ html {
     font-weight: normal !important;
 }
 
-.card-img-top{
-    width:30%;
-    height: 30%;
-}
 
 .ProfileUsername{
-/*    font-family: "Times New Roman", Times, serif;*/
     color:#ffa749;
-    font-size: 40px;
+    font-size: 25px;
     margin-top: 15px;
     margin-bottom: 35px;
 }
 
 .ProfileSettings{
-/*    font-family: "Times New Roman", Times, serif;*/
-    font-size: 20px;
+    font-size: 14px;
     text-align: left;
     padding-left: 30px;
     padding-right: 60px;
@@ -91,7 +109,7 @@ html {
     line-height: 100%;
     color:black;
     margin-bottom: 15px;
-    padding-right: 141px;
+    padding-right: 153px;
 
 }
 .SettingToggle2{
@@ -100,47 +118,90 @@ html {
     margin-bottom: 15px;
     padding-right: 180px;
 }
-/*
 .container-fluid {
     
 font-weight: normal !important;
   display: inline-block;
-  width: 60px;
-  height: 34px;
-  margin-bottom: 5px;
+
 
 }
-*/
 
+.switch {
+  position: relative;
+  display: inline-block;
+    width: 55px;
+height: 30px;
+     margin-bottom: 5px;
+    
+}
+
+.SettingToggle label.switch{
+    
+    background-color: yellow;
+    text-align: right;
+    margin: auto;
+}
 
 .ProfileSettings label.switch{
     text-align: right;
     align-content: justify;
-/*    background-color: yellow;*/
     display: inline-block;
 }
 
-/*
-input:checked .slider:before {
-}
-*/
+.switch input {display:none;}
 
+.slider {
+     position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+    transition: .4s;}
+
+ .slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  -webkit-transition: .4s;
+     transition: .4s;}
+input:checked + .slider {
+  background-color: #2196F3;
+}
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+.slider.round {
+  border-radius: 34px;
+}
 .slider.round:before {
   border-radius: 50%;
 }
 
 .submit input{
   width: 20%;
-/*  display: block;*/
   background: #fff;
   padding:  3px;
   border: 2px solid #000000;
   text-align: center;
-/*  text-decoration:none;*/
     font-weight: bold;
   cursor: pointer;
   transition: all 0.3s ease-out;  
-    margin-top: 20px;
+    margin-top: 30px;
 }
 .submit input:hover {
   background: #06D85F;
