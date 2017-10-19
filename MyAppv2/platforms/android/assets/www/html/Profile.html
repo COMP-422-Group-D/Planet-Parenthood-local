@@ -1,11 +1,15 @@
-        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
-    <link rel="stylesheet" type="text/css" href="bs/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="bs/css/bootstrap-grid.min.css">
+    <html>
+		<head>
+			<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+			<link rel="stylesheet" type="text/css" href="bs/css/bootstrap.min.css">
+			<link rel="stylesheet" type="text/css" href="bs/css/bootstrap-grid.min.css">
         
 
-        <link rel="stylesheet" type="text/css" href="../css/Profile.css">
+        	<link rel="stylesheet" type="text/css" href="../css/Profile.css">
+	
+        	<title>Settings</title>
+		</head>
 
-        <title>Settings</title>
         
     <body>
         <div class= "header">
@@ -14,7 +18,8 @@
         <div class="container-fluid">
             <div class="MasterContainer" style="display: flex;">
             <div class="card" style="width:30rem;">
-              <img class="card-img-top"   src="../media/images/Profile_default.png" alt="Card image cap">
+				<a href="#popup1"><img class="card-img-top"  id="imgView" src="../media/images/Profile_default.png" alt="Card image cap"></a>
+
               <div class="card-body">
                 
                 <div class="ProfileUsername" id="ProfileUsername">Username</div>
@@ -40,15 +45,34 @@
            
 
           </div>  
-                <form method="post" action="../index.html" name='login' class="form-group">
+				</div>
+			</div>
+		
+              <form method="post" action="../index.html" name='login' class="form-group">
                 
                    
         <div class="submit"><input type="submit" name="commit" onclick="check(this.form)" value="Logout"></div>
          
-      </form>
+      			</form>
+			
+			<div id="popup1" class="overlay">
+				<div class="popup" >
+					<h2>Camera Options</h2>
+					<a class="close" href="#">&times;</a>
+					<div class="content">
+						<button onclick="capturePhoto();">Capture</button>
+						<button onclick="getPhoto(pictureSource.PHOTOLIBRARY);">Gallery</button>
+					</div>
+				</div>
+			</div>
         </div>
         
         
          <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+		<script type="text/javascript" src="cordova.js"></script>
+		<script type="text/javascript" src="../js/Profile.js"></script>
+
+</body>
+</html>
