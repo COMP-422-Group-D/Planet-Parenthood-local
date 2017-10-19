@@ -1,2 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
+<<<<<<< HEAD
 <merger version="3"><dataSet config="main"><source path="/Users/ismail/Desktop/repo2/MyAppv2/platforms/android/CordovaLib/src/main/shaders"/></dataSet><dataSet config="debug"><source path="/Users/ismail/Desktop/repo2/MyAppv2/platforms/android/CordovaLib/src/debug/shaders"/></dataSet></merger>
+=======
+<merger version="3"><dataSet config="main"><source path="C:\Users\mypc\Desktop\Repo\MyAppv2\platforms\android\CordovaLib\src\main\shaders"/></dataSet><dataSet config="debug"><source path="C:\Users\mypc\Desktop\Repo\MyAppv2\platforms\android\CordovaLib\src\debug\shaders"/></dataSet></merger>
+>>>>>>> b36b17daaec1ebd28099a5428461f3cc5ac5254b
