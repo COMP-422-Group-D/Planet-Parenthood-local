@@ -51,11 +51,11 @@ body {
         text-transform: uppercase;
         transition: all .1s ease;
         text-decoration: none;
-        text-align: center;
+        text-align: left;
         margin-bottom: 20px;
 }
-.header .submit{
-	text-align: left;
+.header .headerLabel{
+	text-align: center;
 	border: 15px;
 	
 	
