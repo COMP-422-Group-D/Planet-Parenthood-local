@@ -55,13 +55,17 @@ var mainState = {
 		createEnemies();
 
 		scoreText = game.add.text(0,0, 'Score: ',{font: '32px Verdana',fill: '#fff' });
+		
 		winText = game.add.text(game.world.centerX-50, game.world.centerY-100, 'You Win!',{font: '32px Verdana',fill: '#B8860B'});
 		winText.visible = false;
 
 		loseText = game.add.text(game.world.centerX-100, game.world.centerY-100, 'You are dead!',{font: '32px Verdana',fill: '#ff0000'});
 		loseText.visible = false;
-
-		playButton = game.add.button(game.world.centerX-15, 300, 'button', actionOnClick, this, 2, 1, 0);
+		
+		highscoreText= game.add.text(game.world.centerX-60, game.world.centerY-40, 'Score: ',{font: '32px Verdana',fill: '#fff' });
+		highscoreText.visible= false;
+		
+		playButton = game.add.button(game.world.centerX-15, 350, 'button', actionOnClick, this, 2, 1, 0);
 		playButton.visible = false;
 
 	},
@@ -105,6 +109,8 @@ function checkWin(score){
 		winText.visible = true;
 		scoreText.visible = false;
 		playButton.visible= true
+		highscoreText.text ='Score: ' + score;
+		highscoreText.visible = true;
 	}
 }
 //this will organize all of the enemies on the screen
@@ -141,6 +147,8 @@ function playerHandler(player, enemy){
 	scoreText.visible = false;
 	loseText.visible = true;
 	playButton.visible= true;
+	highscoreText.text ='Score: ' + score;
+	highscoreText.visible = true;
 
 }
 //restarts the game if the player presses the button
