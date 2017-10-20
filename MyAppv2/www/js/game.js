@@ -54,7 +54,7 @@ var mainState = {
 
 		createEnemies();
 
-		scoreText = game.add.text(0,550, 'Score: ',{font: '32px Verdana',fill: '#fff' });
+		scoreText = game.add.text(0,0, 'Score: ',{font: '32px Verdana',fill: '#fff' });
 		winText = game.add.text(game.world.centerX-50, game.world.centerY-100, 'You Win!',{font: '32px Verdana',fill: '#B8860B'});
 		winText.visible = false;
 
@@ -91,7 +91,7 @@ function fireBullet() {
 		bullet = bullets.getFirstExists(false);
 	}
 	if(bullet) {
-		bullet.reset(player.x+40,player.y);
+		bullet.reset(player.x+30,player.y);
 		bullet.body.velocity.y = -400;
 		bulletTime = game.time.now + 200;
 	}
