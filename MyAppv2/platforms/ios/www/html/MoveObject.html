@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title></title>
+<style type="text/css">
+    #container{
+        height:400px;
+        width:600px;
+        outline:1px solid black;
+        position:relative;
+    }
+    #guy{
+        position:absolute;
+        height:50px;
+        width:50px;
+        outline:1px solid block;
+        background-color:red;
+        left:0;
+    }
+    
+</style>  
+    
+</head>
+<body>
+    
+<div id="container">
+    
+    <div id="guy"></div>
+    
+    
+</div>
+    <button type="button" onclick="move();">
+        
+    </button>
+<script type="text/javascript">
+    
+var guy = document.getElementById('guy');
+var container = document.getElementById('container');
+
+  var guyleft=0;  
+    function anim(e){
+        if(e.keyCode==39){ //RIGHT
+            guyleft +=2;
+            guy.style.left = guyLeft +'px';
+            if(guyleft>=600){
+                guyleft==true;
+            }
+        }
+        if(e.keyCode==37){ //LEFT
+            guyleft -=2;
+            guy.style.left = guyLeft +'px';
+        }
+        /*if(e.keyCode==38){ //UP
+            
+        }
+        if(e.keyCode==40){ //DOWN
+            
+        }*/
+    }
+    function move(){
+        guyleft +=30;
+        guy.style.left = guyLeft +'px';    }
+    document.onkeydown = anim;
+    
+</script>
+
+</body>
+
+</html>
