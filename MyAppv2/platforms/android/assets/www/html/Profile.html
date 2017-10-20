@@ -1,22 +1,29 @@
-        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
-    <link rel="stylesheet" type="text/css" href="bs/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="bs/css/bootstrap-grid.min.css">
+    <html>
+		<head>
+			<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+			<link rel="stylesheet" type="text/css" href="bs/css/bootstrap.min.css">
+			<link rel="stylesheet" type="text/css" href="bs/css/bootstrap-grid.min.css">
         
 
-        <link rel="stylesheet" type="text/css" href="../css/Profile.css">
+        	<link rel="stylesheet" type="text/css" href="../css/Profile.css">
 
-        <title>Settings</title>
+        	<title>Settings</title>
+		</head>
+
         
     <body>
-        <div class= "header">
-        <p >Settings</p>
-  </div>
+       <div class= "header">
+
+					<a class="submit" href="../html/menu.html"><img width=60px height="50px" style="float: left;" src="../media/images/Left-Arrow.png"></a>
+					<p class="headerLabel">Settings</p>
+				</div>
+  
         <div class="container-fluid">
             <div class="MasterContainer" style="display: flex;">
             <div class="card" style="width:30rem;">
-              <img class="card-img-top"   src="../media/images/Profile_default.png" alt="Card image cap">
+              <img class="card-img-top"  id="imgView" src="../media/images/Profile_default.png" alt="Card image cap">
               <div class="card-body">
-                
+                 
                 <div class="ProfileUsername" id="ProfileUsername">Username</div>
                   <div class="ProfileSettings">
                       
@@ -40,15 +47,22 @@
            
 
           </div>  
-                <form method="post" action="../index.html" name='login' class="form-group">
+				</div>
+			</div>
+		
+              <form method="post" action="../index.html" name='login' class="form-group">
                 
                    
         <div class="submit"><input type="submit" name="commit" onclick="check(this.form)" value="Logout"></div>
          
-      </form>
+      			</form>
         </div>
         
         
          <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+		<script type="text/javascript" src="cordova.js"></script>
+		<script type="text/javascript" src="../js/Profile.js"></script>
+</body>
+</html>
