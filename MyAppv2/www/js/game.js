@@ -12,11 +12,14 @@ var fireButton;
 
 var enemies;
 
+var lives;
 var score = 0;
 var scoreText;
 var winText;
 var loseText;
 var playButton;
+var lives;
+var explosions;
 
 
 var mainState = {
@@ -24,9 +27,12 @@ var mainState = {
 	preload:function() {
 	game.load.image('spaceBackground', '../media/images/background.png');
 	game.load.image('player','../media/images/ship.png');
+	game.load.image('player_lives','../media/images/ship_lives.png');
 	game.load.image('bullet','../media/images/bullet.png');
 	game.load.image('enemy', '../media/images/enemy.png');
+	game.load.image('enemyBullet', '../media/images/enemy_bullet.png');
 	game.load.image('button','../media/images/retry.png');
+	game.load.spritesheet('kaboom', '../media/images/explosion.png', 128, 128);
 	},
 	//add elements to our game
 	create:function() {
@@ -47,12 +53,14 @@ var mainState = {
 		bullets.setAll('outOfBoundsKill', true);
 		bullets.setAll('checkWorldBounds', true);
 		fireButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-
+		
+		
 		enemies = game.add.group();
 		enemies.enableBody = true;
 		enemies.physicsBodyType = Phaser.Physics.ARCADE;
-
+		
 		createEnemies();
+		
 
 		scoreText = game.add.text(0,0, 'Score: ',{font: '32px Verdana',fill: '#fff' });
 		
@@ -67,7 +75,21 @@ var mainState = {
 		
 		playButton = game.add.button(game.world.centerX-15, 350, 'button', actionOnClick, this, 2, 1, 0);
 		playButton.visible = false;
-
+		
+		lives = game.add.group();
+		game.add.text(game.world.width - 115, 0, 'Lives : ', { font: '32px Verdana', fill: '#fff' });
+		for (var i = 0; i < 3; i++) 
+    {
+        var ship = lives.create(game.world.width - 100 + (30 * i), 60, 'player_lives');
+        ship.anchor.setTo(0.5, 0.5);
+        ship.angle = 90;
+        ship.alpha = 0.4;
+    }
+		
+	//  An explosion pool
+		explosions = game.add.group();
+		explosions.createMultiple(30, 'kaboom');
+		explosions.forEach(setupEnemy, this);
 	},
 	//conditions to check for every frame
 	update:function(){
@@ -125,8 +147,15 @@ function createEnemies() {
 		enemies.y = 50;
 
 		var tween = game.add.tween(enemies).to({x:200}, 2000, Phaser.Easing.Linear.None, true,0,1000, true);
-		tween.onLoop.add(descend, this);
+		tween.onRepeat.add(descend, this);
 	}
+}
+function setupEnemy (enemy) {
+
+    enemy.anchor.x = 0.5;
+    enemy.anchor.y = 0.5;
+    enemy.animations.add('kaboom');
+
 }
 
 function descend() {
@@ -144,6 +173,11 @@ function collisionHandler(bullet, enemy){
 //handles the event if the player collides with the enemy
 function playerHandler(player, enemy){
 	player.kill();
+	//  And create an explosion :)
+    var explosion = explosions.getFirstExists(false);
+    explosion.reset(player.body.x, player.body.y);
+    explosion.play('kaboom', 30, false, true);
+
 	scoreText.visible = false;
 	loseText.visible = true;
 	playButton.visible= true;
