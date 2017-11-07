@@ -11,6 +11,7 @@ function preload() {
     game.load.spritesheet('kaboom', '../media/images/explosion.png', 128, 128);
     game.load.image('starfield', '../media/images/background.png');
 	game.load.image('button','../media/images/retry.png');
+	game.load.image('menu_button','../media/images/menu_button.png');
 
 
 }
@@ -92,6 +93,9 @@ function create() {
 		
 	playButton = game.add.button(game.world.centerX-15, 350, 'button', restart, this, 2, 1, 0);
 	playButton.visible = false;
+	
+	menuButton = game.add.button(game.world.centerX-15, 400, 'menu_button', openMenu, this, 2, 1, 0);
+	menuButton.visible = false;
 
     for (var i = 0; i < 3; i++) 
     {
@@ -212,7 +216,6 @@ function collisionHandler (bullet, alien) {
     if (aliens.countLiving() == 0)
     {
         score += 1000;
-
         createAliens();
     }
 
@@ -245,6 +248,7 @@ function enemyHitsPlayer (player,bullet) {
 		playButton.visible= true;
 		highscoreText.text ='Score: ' + score;
 		highscoreText.visible = true;
+		menuButton.visible = true;
     }
 
 }
@@ -304,7 +308,10 @@ function resetBullet (bullet) {
     bullet.kill();
 
 }
-
+function openMenu() {
+	window.open("../html/menu.html");
+	
+}
 function restart () {
 
     //  A new level starts
@@ -318,7 +325,7 @@ function restart () {
 	loseText.visible = false;
 	highscoreText.visible = false;
 	playButton.visible = false;
-
+	menuButton.visible = false;
 	scoreString.visible = true;
 	scoreText.visible = true;
 	
