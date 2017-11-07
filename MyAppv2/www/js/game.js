@@ -10,6 +10,7 @@ function preload() {
 	game.load.image('ship_lives', '../media/images/ship_lives.png');
     game.load.spritesheet('kaboom', '../media/images/explosion.png', 128, 128);
     game.load.image('starfield', '../media/images/background.png');
+	game.load.image('button','../media/images/retry.png');
 
 
 }
@@ -30,6 +31,10 @@ var enemyBullet;
 var firingTimer = 0;
 var stateText;
 var livingEnemies = [];
+
+var scoreText;
+var loseText;
+var playButton;
 
 function create() {
 
@@ -79,10 +84,14 @@ function create() {
     lives = game.add.group();
     game.add.text(game.world.width - 125, 0, 'Lives : ', { font: '32px Verdana', fill: '#fff' });
 
-    //  Text
-    stateText = game.add.text(game.world.centerX,game.world.centerY,' ', { font: '84px Arial', fill: '#fff' });
-    stateText.anchor.setTo(0.5, 0.5);
-    stateText.visible = false;
+	loseText = game.add.text(game.world.centerX-100, game.world.centerY-100, 'You are dead!',{font: '32px Verdana',fill: '#ff0000'});
+	loseText.visible = false;
+		
+	highscoreText= game.add.text(game.world.centerX-60, game.world.centerY-40, 'Score: ',{font: '32px Verdana',fill: '#fff' });
+	highscoreText.visible= false;
+		
+	playButton = game.add.button(game.world.centerX-15, 350, 'button', restart, this, 2, 1, 0);
+	playButton.visible = false;
 
     for (var i = 0; i < 3; i++) 
     {
@@ -203,14 +212,8 @@ function collisionHandler (bullet, alien) {
     if (aliens.countLiving() == 0)
     {
         score += 1000;
-        scoreText.text = scoreString + score;
 
-        enemyBullets.callAll('kill',this);
-        stateText.text = " You Won, \n Click to restart";
-        stateText.visible = true;
-
-        //the "click to restart" handler
-        game.input.onTap.addOnce(restart,this);
+        createAliens();
     }
 
 }
@@ -236,12 +239,12 @@ function enemyHitsPlayer (player,bullet) {
     {
         player.kill();
         enemyBullets.callAll('kill');
-
-        stateText.text=" GAME OVER \n Click to restart";
-        stateText.visible = true;
-
-        //the "click to restart" handler
-        game.input.onTap.addOnce(restart,this);
+		scoreString.visible = false;
+		scoreText.visible = false;
+		loseText.visible = true;
+		playButton.visible= true;
+		highscoreText.text ='Score: ' + score;
+		highscoreText.visible = true;
     }
 
 }
@@ -311,6 +314,14 @@ function restart () {
     //  And brings the aliens back from the dead :)
     aliens.removeAll();
     createAliens();
+	
+	loseText.visible = false;
+	highscoreText.visible = false;
+	playButton.visible = false;
+
+	scoreString.visible = true;
+	scoreText.visible = true;
+	
 
     //revives the player
     player.revive();
