@@ -3,7 +3,10 @@ canvas {
 	position: absolute;
 	top: 0px;
 	left: 0px;
-	background: transparent;
+/*	background: transparent;*/
+}
+body{
+    background-color: black;
 }
 #background {
 	z-index: -2;

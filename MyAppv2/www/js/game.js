@@ -12,7 +12,7 @@ function preload() {
     game.load.image('starfield', '../media/images/background.png');
 	game.load.image('button','../media/images/retry.png');
 	game.load.image('menu_button','../media/images/menu_button.png');
-
+	game.load.image('platform','../media/images/invisi_plat.png');
 
 }
 
@@ -32,7 +32,7 @@ var enemyBullet;
 var firingTimer = 0;
 var stateText;
 var livingEnemies = [];
-
+var platform;
 var scoreText;
 var loseText;
 var playButton;
@@ -70,10 +70,15 @@ function create() {
     game.physics.enable(player, Phaser.Physics.ARCADE);
 	player.body.collideWorldBounds = true;
 
+	//platform
+	platform = game.add.sprite(game.world.centerX, game.world.centerY+350, 'platform');
+    platform.anchor.setTo(0.5, 0.5);
+    game.physics.enable(platform, Phaser.Physics.ARCADE);
 
     aliens = game.add.group();
     aliens.enableBody = true;
     aliens.physicsBodyType = Phaser.Physics.ARCADE;
+
 
     createAliens();
 
@@ -123,16 +128,16 @@ function createAliens () {
     {
         for (var x = 0; x < 8; x++)
         {
-            var alien = aliens.create(x * 35, y * 60, 'invader');
-            alien.anchor.setTo(2, 0.5);
+            var alien = aliens.create(x * 43, y * 60, 'invader');
+            alien.anchor.setTo(1.9, 0.5);
         }
     }
 
-    aliens.x = 100;
+    aliens.x = 110;
     aliens.y = 50;
 
     //  All this does is basically start the invaders moving. Notice we're moving the Group they belong to, rather than the invaders directly.
-    var tween = game.add.tween(aliens).to( { x: 200 }, 2000, Phaser.Easing.Linear.None, true, 0, 1000, true);
+    var tween = game.add.tween(aliens).to( { x: 175 }, 2000, Phaser.Easing.Linear.None, true, 0, 1000, true);
 
     //  When the tween loops it calls descend
     tween.onRepeat.add(descend, this);
@@ -148,7 +153,7 @@ function setupInvader (invader) {
 
 function descend() {
 
-    aliens.y += 10;
+    aliens.y += 15;
 
 }
 
@@ -181,10 +186,14 @@ function update() {
         {
             enemyFires();
         }
-
+		if (aliens.y > 650) {
+			aliens.kill();
+		}
         //  Run collision
         game.physics.arcade.overlap(bullets, aliens, collisionHandler, null, this);
         game.physics.arcade.overlap(enemyBullets, player, enemyHitsPlayer, null, this);
+		game.physics.arcade.overlap(aliens, player, enemyHitsPlayer, null, this);
+		game.physics.arcade.overlap(platform,aliens, outOfBoundsHandler, null, this);
     }
 
 }
@@ -221,6 +230,15 @@ function collisionHandler (bullet, alien) {
 
 }
 
+function outOfBoundsHandler (alien, platform) {
+    platform.kill();
+	
+    if (aliens.countLiving() == 0)
+    {
+        createAliens();
+    }
+
+}
 function enemyHitsPlayer (player,bullet) {
     
     bullet.kill();
@@ -275,7 +293,7 @@ function enemyFires () {
         // randomly select one of them
         var shooter=livingEnemies[random];
         // And fire the bullet from this enemy
-        enemyBullet.reset(shooter.body.x, shooter.body.y);
+        enemyBullet.reset(shooter.body.x+40, shooter.body.y+50);
 
         game.physics.arcade.moveToObject(enemyBullet,player,120);
         firingTimer = game.time.now + 2000;
