@@ -12,7 +12,11 @@ function preload() {
     game.load.image('starfield', '../media/images/background.png');
 	game.load.image('button','../media/images/retry.png');
 	game.load.image('menu_button','../media/images/menu_button.png');
+<<<<<<< HEAD
 	game.load.image('platform','../media/images/invisi_plat.png');
+=======
+
+>>>>>>> 3f3230e6ce4441e33e0065106de3dc374487d995
 
 }
 
@@ -32,7 +36,11 @@ var enemyBullet;
 var firingTimer = 0;
 var stateText;
 var livingEnemies = [];
+<<<<<<< HEAD
 var platform;
+=======
+
+>>>>>>> 3f3230e6ce4441e33e0065106de3dc374487d995
 var scoreText;
 var loseText;
 var playButton;
@@ -69,6 +77,7 @@ function create() {
     player.anchor.setTo(0.5, 0.5);
     game.physics.enable(player, Phaser.Physics.ARCADE);
 	player.body.collideWorldBounds = true;
+<<<<<<< HEAD
 
 	//platform
 	platform = game.add.sprite(game.world.centerX, game.world.centerY+300, 'platform');
@@ -80,6 +89,14 @@ function create() {
     aliens.physicsBodyType = Phaser.Physics.ARCADE;
 
 
+=======
+
+
+    aliens = game.add.group();
+    aliens.enableBody = true;
+    aliens.physicsBodyType = Phaser.Physics.ARCADE;
+
+>>>>>>> 3f3230e6ce4441e33e0065106de3dc374487d995
     createAliens();
 
     //  The score
@@ -128,6 +145,7 @@ function createAliens () {
     {
         for (var x = 0; x < 8; x++)
         {
+<<<<<<< HEAD
             var alien = aliens.create(x * 43, y * 60, 'invader');
             alien.anchor.setTo(1.9, 0.5);
         }
@@ -235,10 +253,109 @@ function outOfBoundsHandler (alien, platform) {
 	
     if (aliens.countLiving() == 0)
     {
+=======
+            var alien = aliens.create(x * 35, y * 60, 'invader');
+            alien.anchor.setTo(2, 0.5);
+        }
+    }
+
+    aliens.x = 100;
+    aliens.y = 50;
+
+    //  All this does is basically start the invaders moving. Notice we're moving the Group they belong to, rather than the invaders directly.
+    var tween = game.add.tween(aliens).to( { x: 200 }, 2000, Phaser.Easing.Linear.None, true, 0, 1000, true);
+
+    //  When the tween loops it calls descend
+    tween.onRepeat.add(descend, this);
+}
+
+function setupInvader (invader) {
+
+    invader.anchor.x = 0.5;
+    invader.anchor.y = 0.5;
+    invader.animations.add('kaboom');
+
+}
+
+function descend() {
+
+    aliens.y += 10;
+
+}
+
+function update() {
+
+    //  Scroll the background
+    starfield.tilePosition.y += 2;
+
+    if (player.alive)
+    {
+        //  Reset the player, then check for movement keys
+        player.body.velocity.setTo(0, 0);
+
+        if (cursors.left.isDown)
+        {
+            player.body.velocity.x = -200;
+        }
+        else if (cursors.right.isDown)
+        {
+            player.body.velocity.x = 200;
+        }
+
+        //  Firing?
+        if (fireButton.isDown)
+        {
+            fireBullet();
+        }
+
+        if (game.time.now > firingTimer)
+        {
+            enemyFires();
+        }
+
+        //  Run collision
+        game.physics.arcade.overlap(bullets, aliens, collisionHandler, null, this);
+        game.physics.arcade.overlap(enemyBullets, player, enemyHitsPlayer, null, this);
+    }
+
+}
+
+function render() {
+
+    // for (var i = 0; i < aliens.length; i++)
+    // {
+    //     game.debug.body(aliens.children[i]);
+    // }
+
+}
+
+function collisionHandler (bullet, alien) {
+
+    //  When a bullet hits an alien we kill them both
+    bullet.kill();
+    alien.kill();
+
+    //  Increase the score
+    score += 20;
+    scoreText.text = scoreString + score;
+
+    //  And create an explosion :)
+    var explosion = explosions.getFirstExists(false);
+    explosion.reset(alien.body.x, alien.body.y);
+    explosion.play('kaboom', 30, false, true);
+
+    if (aliens.countLiving() == 0)
+    {
+        score += 1000;
+>>>>>>> 3f3230e6ce4441e33e0065106de3dc374487d995
         createAliens();
     }
 
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 3f3230e6ce4441e33e0065106de3dc374487d995
 function enemyHitsPlayer (player,bullet) {
     
     bullet.kill();
@@ -268,6 +385,7 @@ function enemyHitsPlayer (player,bullet) {
 		highscoreText.visible = true;
 		menuButton.visible = true;
     }
+<<<<<<< HEAD
 
 }
 
@@ -285,6 +403,25 @@ function enemyFires () {
     });
 
 
+=======
+
+}
+
+function enemyFires () {
+
+    //  Grab the first bullet we can from the pool
+    enemyBullet = enemyBullets.getFirstExists(false);
+
+    livingEnemies.length=0;
+
+    aliens.forEachAlive(function(alien){
+
+        // put every living enemy in an array
+        livingEnemies.push(alien);
+    });
+
+
+>>>>>>> 3f3230e6ce4441e33e0065106de3dc374487d995
     if (enemyBullet && livingEnemies.length > 0)
     {
         
@@ -293,7 +430,11 @@ function enemyFires () {
         // randomly select one of them
         var shooter=livingEnemies[random];
         // And fire the bullet from this enemy
+<<<<<<< HEAD
         enemyBullet.reset(shooter.body.x+40, shooter.body.y+50);
+=======
+        enemyBullet.reset(shooter.body.x, shooter.body.y);
+>>>>>>> 3f3230e6ce4441e33e0065106de3dc374487d995
 
         game.physics.arcade.moveToObject(enemyBullet,player,120);
         firingTimer = game.time.now + 2000;

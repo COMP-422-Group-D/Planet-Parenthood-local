@@ -185,7 +185,10 @@ function update() {
         //  Run collision
         game.physics.arcade.overlap(bullets, aliens, collisionHandler, null, this);
         game.physics.arcade.overlap(enemyBullets, player, enemyHitsPlayer, null, this);
+<<<<<<< HEAD
 		game.physics.arcade.overlap(aliens, player, enemyHitsPlayer, null, this);
+=======
+>>>>>>> 3f3230e6ce4441e33e0065106de3dc374487d995
     }
 
 }
@@ -276,7 +279,11 @@ function enemyFires () {
         // randomly select one of them
         var shooter=livingEnemies[random];
         // And fire the bullet from this enemy
+<<<<<<< HEAD
         enemyBullet.reset(shooter.body.x+40, shooter.body.y+50);
+=======
+        enemyBullet.reset(shooter.body.x, shooter.body.y);
+>>>>>>> 3f3230e6ce4441e33e0065106de3dc374487d995
 
         game.physics.arcade.moveToObject(enemyBullet,player,120);
         firingTimer = game.time.now + 2000;

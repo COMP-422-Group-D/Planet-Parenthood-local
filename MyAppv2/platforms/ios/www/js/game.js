@@ -1,416 +1,338 @@
-var game = new Game();
 
-function init() {
-	if(game.init())
-		game.start();
+var game = new Phaser.Game(400, 650, Phaser.AUTO, 'phaser-example', { preload: preload, create: create, update: update, render: render });
+
+function preload() {
+
+    game.load.image('bullet', '../media/images/bullet.png');
+    game.load.image('enemyBullet', '../media/images/enemy_bullet.png');
+    game.load.image('invader', '../media/images/enemy.png');
+    game.load.image('ship', '../media/images/ship.png');
+	game.load.image('ship_lives', '../media/images/ship_lives.png');
+    game.load.spritesheet('kaboom', '../media/images/explosion.png', 128, 128);
+    game.load.image('starfield', '../media/images/background.png');
+	game.load.image('button','../media/images/retry.png');
+	game.load.image('menu_button','../media/images/menu_button.png');
+
+
 }
 
+var player;
+var aliens;
+var bullets;
+var bulletTime = 0;
+var cursors;
+var fireButton;
+var explosions;
+var starfield;
+var score = 0;
+var scoreString = '';
+var scoreText;
+var lives;
+var enemyBullet;
+var firingTimer = 0;
+var stateText;
+var livingEnemies = [];
 
-/*
- * define an object to hold all our images for the game so images
- * are only ever created once. 
- */
-var imageRepository = new function() {
-	// Define images
-	this.background = new Image();
-	this.spaceship = new Image();
-	this.bullet = new Image();
+var scoreText;
+var loseText;
+var playButton;
 
-	// Ensure all images have loaded before starting the game
-	var numImages = 3;
-	var numLoaded = 0;
-	function imageLoaded() {
-		numLoaded++;
-		if (numLoaded === numImages) {
-			window.init();
-		}
-	}
-	this.background.onload = function() {
-		imageLoaded();
-	}
-	this.spaceship.onload = function() {
-		imageLoaded();
-	}
-	this.bullet.onload = function() {
-		imageLoaded();
-	}
-	
-	// Set images src
-	this.background.src = "../media/images/spaceBackground.png";
-	this.spaceship.src = "../media/images/ship.png";
-	this.bullet.src = "../media/images/bullet.png";
-}
+function create() {
 
+    game.physics.startSystem(Phaser.Physics.ARCADE);
 
-/*
- * creates the Drawable object which will be the base class for
- * all drawable objects in the game. Sets up default variables
- * that all child objects will inherit, as well as the defualt
- * functions. 
- */
-function Drawable() {
-	this.init = function(x, y, width, height) {
-		// Defualt variables
-		this.x = x;
-		this.y = y;
-		this.width = width;
-		this.height = height;
-	}
-	
-	this.speed = 20;
-	this.canvasWidth = 0;
-	this.canvasHeight = 0;
-	
-	// Define abstract function to be implemented in child objects
-	this.draw = function() {
-	};
-	this.move = function() {
-	};
-}
+    //  The scrolling starfield background
+    starfield = game.add.tileSprite(0, 0, 400, 650, 'starfield');
+
+    //  Our bullet group
+    bullets = game.add.group();
+    bullets.enableBody = true;
+    bullets.physicsBodyType = Phaser.Physics.ARCADE;
+    bullets.createMultiple(30, 'bullet');
+    bullets.setAll('anchor.x', 0.5);
+    bullets.setAll('anchor.y', 1);
+    bullets.setAll('outOfBoundsKill', true);
+    bullets.setAll('checkWorldBounds', true);
+
+    // The enemy's bullets
+    enemyBullets = game.add.group();
+    enemyBullets.enableBody = true;
+    enemyBullets.physicsBodyType = Phaser.Physics.ARCADE;
+    enemyBullets.createMultiple(30, 'enemyBullet');
+    enemyBullets.setAll('anchor.x', 0.5);
+    enemyBullets.setAll('anchor.y', 1);
+    enemyBullets.setAll('outOfBoundsKill', true);
+    enemyBullets.setAll('checkWorldBounds', true);
+
+    //  The hero!
+    player = game.add.sprite(game.world.centerX-50, game.world.centerY+250, 'ship');
+    player.anchor.setTo(0.5, 0.5);
+    game.physics.enable(player, Phaser.Physics.ARCADE);
+	player.body.collideWorldBounds = true;
 
 
-/*
- * creates the Background object which will become a child of
- * the Drawable object. The background is drawn on the "background"
- * canvas and creates the illusion of moving by panning the image.
- */
-function Background() {
-	this.speed = 11; // Redefine speed of the background for panning
-	
-	// Implement abstract function
-	this.draw = function() {
-		// Pan background
-		this.y += this.speed;
-		this.context.drawImage(imageRepository.background, this.x, this.y);
+    aliens = game.add.group();
+    aliens.enableBody = true;
+    aliens.physicsBodyType = Phaser.Physics.ARCADE;
+
+    createAliens();
+
+    //  The score
+    scoreString = 'Score : ';
+    scoreText = game.add.text(0, 0, scoreString + score, { font: '32px Verdana', fill: '#fff' });
+
+    //  Lives
+    lives = game.add.group();
+    game.add.text(game.world.width - 125, 0, 'Lives : ', { font: '32px Verdana', fill: '#fff' });
+
+	loseText = game.add.text(game.world.centerX-100, game.world.centerY-100, 'You are dead!',{font: '32px Verdana',fill: '#ff0000'});
+	loseText.visible = false;
 		
-		// Draw another image at the top edge of the first image
-		this.context.drawImage(imageRepository.background, this.x, this.y - this.canvasHeight);
-
-		// If the image scrolled off the screen, reset
-		if (this.y >= this.canvasHeight)
-			this.y = 0;
-	};
-}
-// Set Background to inherit properties from Drawable
-Background.prototype = new Drawable();
-
-
-/*
- * creates the Bullet object which the ship fires. The bullets are
- * drawn on the "main" canvas.
- */
-function Bullet() {	
-	this.alive = false; // Is true if the bullet is currently in use
-	
-	/*
-	 * sets the bullet values
-	 */
-	this.spawn = function(x, y, speed) {
-		this.x = x;
-		this.y = y;
-		this.speed = 120;
-		this.alive = true;
-	};
-
-	/*
-	 * Uses a "dirty rectangle" to erase the bullet and moves it.
-	 * Returns true if the bullet moved off the screen, indicating that
-	 * the bullet is ready to be cleared by the pool, otherwise draws
-	 * the bullet.
-	 */
-	this.draw = function() {
-		this.context.clearRect(this.x, this.y, this.width, this.height);
-		this.y -= this.speed;
-		if (this.y <= 0 - this.height) {
-			return true;
-		}
-		else {
-			this.context.drawImage(imageRepository.bullet, this.x, this.y);
-		}
-	};
-	
-	/*
-	 * Resets the bullet values
-	 */
-	this.clear = function() {
-		this.x = 0;
-		this.y = 0;
-		this.speed = 0;
-		this.alive = false;
-	};
-}
-Bullet.prototype = new Drawable();
-
-
-/*
- * Okay this is a read you guys!!
- * Custom Pool object. Holds Bullet objects to be managed to prevent
- * garbage collection. When the pool is initialized, it populates an array with 
- * Bullet objects. When the pool needs to create a new object for use, it looks at
- * the last item in the array and checks to see if it is currently
- * in use or not. If it is in use, the pool is full. If it is 
- *   not in use, the pool "spawns" the last item in the array and 
- *   then pops it from the end and pushed it back onto the front of
- *   the array. This makes the pool have free objects on the back 
- *   and used objects in the front.
- * Doing this makes creating/destroying objects in the pool 
- * constant.
- */
-function Pool(maxSize) {
-	var size = maxSize; // Max bullets allowed in the pool
-	var pool = [];
-	
-	/*
-	 * Populates the pool array with Bullet objects
-	 */
-	this.init = function() {
-		for (var i = 0; i < size; i++) {
-			// Initalize the bullet object
-			var bullet = new Bullet();
-			bullet.init(0,0, imageRepository.bullet.width,
-			            imageRepository.bullet.height);
-			pool[i] = bullet;
-		}
-	};
-	
-	/*
-	 * Grabs the last item in the list and initializes it and
-	 * pushes it to the front of the array.
-	 */
-	this.get = function(x, y, speed) {
-		if(!pool[size - 1].alive) {
-			pool[size - 1].spawn(x, y, speed);
-			pool.unshift(pool.pop());
-		}
-	};
-	
-	/*
-	 * Used for the ship to be able to get two bullets at once. If
-	 * only the get() function is used twice, the ship is able to
-	 * fire and only have 1 bullet spawn instead of 2.
-	 */
-	this.getTwo = function(x1, y1, speed1, x2, y2, speed2) {
-		if(!pool[size - 1].alive && 
-		   !pool[size - 2].alive) {
-				this.get(x1, y1, speed1);
-				this.get(x2, y2, speed2);
-			 }
-	};
-	
-	/*
-	 * Draws any in use Bullets. If a bullet goes off the screen,
-	 * clears it and pushes it to the front of the array.
-	 */
-	this.animate = function() {
-		for (var i = 0; i < size; i++) {
-			// Only draw until we find a bullet that is not alive
-			if (pool[i].alive) {
-				if (pool[i].draw()) {
-					pool[i].clear();
-					pool.push((pool.splice(i,1))[0]);
-				}
-			}
-			else
-				break;
-		}
-	};
-}
-
-
-/*
- * Create the Ship object that the player controls. The ship is
- * drawn on the "ship" canvas and uses dirty rectangles to move
- * around the screen.
- */
-function Ship() {
-	this.speed = 30;
-	this.bulletPool = new Pool(30);
-	this.bulletPool.init();
-
-	var fireRate = 60;
-	var counter = 0;
-	
-	this.draw = function() {
-		this.context.drawImage(imageRepository.spaceship, this.x, this.y);
-	};
-	this.move = function() {	
-		counter++;
-		if (KEY_STATUS.left || KEY_STATUS.right ||
-			KEY_STATUS.down || KEY_STATUS.up) {
-			// the ship moved, so erase it's current image so it can
-			// be redrawn in it's new location
-			this.context.clearRect(this.x, this.y, this.width, this.height);
-			
-			// update x and y according to the direction to move and
-			// redraw the ship. Change the else if's to if statements
-			// to have diagonal movement.
-			if (KEY_STATUS.left) {
-				this.x -= this.speed
-				if (this.x <= 0) // keep player within the screen
-					this.x = 0;
-			} else if (KEY_STATUS.right) {
-				this.x += this.speed
-				if (this.x >= this.canvasWidth - this.width)
-					this.x = this.canvasWidth - this.width;
-			} else if (KEY_STATUS.up) {
-				this.y -= this.speed
-				if (this.y <= this.canvasHeight/4*3)
-					this.y = this.canvasHeight/4*3;
-			} else if (KEY_STATUS.down) {
-				this.y += this.speed
-				if (this.y >= this.canvasHeight - this.height)
-					this.y = this.canvasHeight - this.height;
-			}
-			
-			// finish by redrawing the ship
-			this.draw();
-		}
+	highscoreText= game.add.text(game.world.centerX-60, game.world.centerY-40, 'Score: ',{font: '32px Verdana',fill: '#fff' });
+	highscoreText.visible= false;
 		
-		if (KEY_STATUS.space && counter >= fireRate) {
-			this.fire();
-			counter = 0;
-		}
-	};
+	playButton = game.add.button(game.world.centerX-15, 350, 'button', restart, this, 2, 1, 0);
+	playButton.visible = false;
 	
-	/*
-	 * fires two bullets
-	 */
-	this.fire = function() {
-		this.bulletPool.getTwo(this.x+6, this.y, 3,
-		                       this.x+33, this.y, 3);
-	};
+	menuButton = game.add.button(game.world.centerX-15, 400, 'menu_button', openMenu, this, 2, 1, 0);
+	menuButton.visible = false;
+
+    for (var i = 0; i < 3; i++) 
+    {
+        var ship = lives.create(game.world.width - 100 + (30 * i), 60, 'ship_lives');
+        ship.anchor.setTo(0.5, 0.5);
+        ship.angle = 90;
+        ship.alpha = 0.4;
+    }
+
+    //  An explosion pool
+    explosions = game.add.group();
+    explosions.createMultiple(30, 'kaboom');
+    explosions.forEach(setupInvader, this);
+
+    //  And some controls to play the game with
+    cursors = game.input.keyboard.createCursorKeys();
+    fireButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+    
 }
-Ship.prototype = new Drawable();
+//this will organize all of the enemies on the screen
+
+function createAliens () {
+
+    for (var y = 0; y < 4; y++)
+    {
+        for (var x = 0; x < 8; x++)
+        {
+            var alien = aliens.create(x * 35, y * 60, 'invader');
+            alien.anchor.setTo(2, 0.5);
+        }
+    }
+
+    aliens.x = 100;
+    aliens.y = 50;
+
+    //  All this does is basically start the invaders moving. Notice we're moving the Group they belong to, rather than the invaders directly.
+    var tween = game.add.tween(aliens).to( { x: 200 }, 2000, Phaser.Easing.Linear.None, true, 0, 1000, true);
+
+    //  When the tween loops it calls descend
+    tween.onRepeat.add(descend, this);
+}
+
+function setupInvader (invader) {
+
+    invader.anchor.x = 0.5;
+    invader.anchor.y = 0.5;
+    invader.animations.add('kaboom');
+
+}
+
+function descend() {
+
+    aliens.y += 10;
+
+}
+
+function update() {
+
+    //  Scroll the background
+    starfield.tilePosition.y += 2;
+
+    if (player.alive)
+    {
+        //  Reset the player, then check for movement keys
+        player.body.velocity.setTo(0, 0);
+
+        if (cursors.left.isDown)
+        {
+            player.body.velocity.x = -200;
+        }
+        else if (cursors.right.isDown)
+        {
+            player.body.velocity.x = 200;
+        }
+
+        //  Firing?
+        if (fireButton.isDown)
+        {
+            fireBullet();
+        }
+
+        if (game.time.now > firingTimer)
+        {
+            enemyFires();
+        }
+
+        //  Run collision
+        game.physics.arcade.overlap(bullets, aliens, collisionHandler, null, this);
+        game.physics.arcade.overlap(enemyBullets, player, enemyHitsPlayer, null, this);
+    }
+
+}
+
+function render() {
+
+    // for (var i = 0; i < aliens.length; i++)
+    // {
+    //     game.debug.body(aliens.children[i]);
+    // }
+
+}
+
+function collisionHandler (bullet, alien) {
+
+    //  When a bullet hits an alien we kill them both
+    bullet.kill();
+    alien.kill();
+
+    //  Increase the score
+    score += 20;
+    scoreText.text = scoreString + score;
+
+    //  And create an explosion :)
+    var explosion = explosions.getFirstExists(false);
+    explosion.reset(alien.body.x, alien.body.y);
+    explosion.play('kaboom', 30, false, true);
+
+    if (aliens.countLiving() == 0)
+    {
+        score += 1000;
+        createAliens();
+    }
+
+}
+
+function enemyHitsPlayer (player,bullet) {
+    
+    bullet.kill();
+
+    live = lives.getFirstAlive();
+
+    if (live)
+    {
+        live.kill();
+    }
+
+    //  And create an explosion :)
+    var explosion = explosions.getFirstExists(false);
+    explosion.reset(player.body.x, player.body.y);
+    explosion.play('kaboom', 30, false, true);
+
+    // When the player dies
+    if (lives.countLiving() < 1)
+    {
+        player.kill();
+        enemyBullets.callAll('kill');
+		scoreString.visible = false;
+		scoreText.visible = false;
+		loseText.visible = true;
+		playButton.visible= true;
+		highscoreText.text ='Score: ' + score;
+		highscoreText.visible = true;
+		menuButton.visible = true;
+    }
+
+}
+
+function enemyFires () {
+
+    //  Grab the first bullet we can from the pool
+    enemyBullet = enemyBullets.getFirstExists(false);
+
+    livingEnemies.length=0;
+
+    aliens.forEachAlive(function(alien){
+
+        // put every living enemy in an array
+        livingEnemies.push(alien);
+    });
 
 
- /*
- * Creates the Game object which will hold all objects and data for
- * the game.
- */
-function Game() {
-	/*
-	 * gets canvas information and context and sets up all game
-	 * objects. Returns true if the canvas is supported and false if it
-	 * is not. This is to stop the animation script from constantly
-	 * running on browsers that do not support the canvas.
-	 */
-	this.init = function() {
-		// Get the canvas elements
-		this.bgCanvas = document.getElementById('background');
-		this.shipCanvas = document.getElementById('ship');
-		this.mainCanvas = document.getElementById('main');
-		
-		// Test to see if canvas is supported. Only need to
-		// check one canvas
-		if (this.bgCanvas.getContext) {
-			this.bgContext = this.bgCanvas.getContext('2d');
-			this.shipContext = this.shipCanvas.getContext('2d');
-			this.mainContext = this.mainCanvas.getContext('2d');
-		
-			// Initialize objects to contain their context and canvas
-			// information
-			Background.prototype.context = this.bgContext;
-			Background.prototype.canvasWidth = this.bgCanvas.width;
-			Background.prototype.canvasHeight = this.bgCanvas.height;
-			
-			Ship.prototype.context = this.shipContext;
-			Ship.prototype.canvasWidth = this.shipCanvas.width;
-			Ship.prototype.canvasHeight = this.shipCanvas.height;
-			
-			Bullet.prototype.context = this.mainContext;
-			Bullet.prototype.canvasWidth = this.mainCanvas.width;
-			Bullet.prototype.canvasHeight = this.mainCanvas.height;
-			
-			// initialize the background object
-			this.background = new Background();
-			this.background.init(0,0); // Set draw point to 0,0
-			
-			// initialize the ship object
-			this.ship = new Ship();
-			// set the ship to start near the bottom middle of the canvas
-			var shipStartX = this.shipCanvas.width/2 - imageRepository.spaceship.width;
-			var shipStartY = this.shipCanvas.height/4*3 + imageRepository.spaceship.height*2;
-			this.ship.init(shipStartX, shipStartY, imageRepository.spaceship.width,
-			               imageRepository.spaceship.height);
+    if (enemyBullet && livingEnemies.length > 0)
+    {
+        
+        var random=game.rnd.integerInRange(0,livingEnemies.length-1);
 
-			return true;
-		} else {
-			return false;
-		}
-	};
+        // randomly select one of them
+        var shooter=livingEnemies[random];
+        // And fire the bullet from this enemy
+        enemyBullet.reset(shooter.body.x, shooter.body.y);
+
+        game.physics.arcade.moveToObject(enemyBullet,player,120);
+        firingTimer = game.time.now + 2000;
+    }
+
+}
+
+function fireBullet () {
+
+    //  To avoid them being allowed to fire too fast we set a time limit
+    if (game.time.now > bulletTime)
+    {
+        //  Grab the first bullet we can from the pool
+        bullet = bullets.getFirstExists(false);
+
+        if (bullet)
+        {
+            //  And fire it
+            bullet.reset(player.x, player.y + 8);
+            bullet.body.velocity.y = -400;
+            bulletTime = game.time.now + 200;
+        }
+    }
+
+}
+
+function resetBullet (bullet) {
+
+    //  Called if the bullet goes out of the screen
+    bullet.kill();
+
+}
+function openMenu() {
+	window.open("../html/menu.html");
 	
-	// start the animation loop
-	this.start = function() {
-		this.ship.draw();
-		animate();
-	};
 }
+function restart () {
 
+    //  A new level starts
+    score = 0;
+    //resets the life count
+    lives.callAll('revive');
+    //  And brings the aliens back from the dead :)
+    aliens.removeAll();
+    createAliens();
+	
+	loseText.visible = false;
+	highscoreText.visible = false;
+	playButton.visible = false;
+	menuButton.visible = false;
+	scoreString.visible = true;
+	scoreText.visible = true;
+	
 
-/*
- * the animation loop. Calls the requestAnimationFrame shim to
- * optimize the game loop and draws all game objects. 
- */
-function animate() {
-	requestAnimFrame( animate );
-	game.background.draw();
-	game.ship.move();
-	game.ship.bulletPool.animate(); 
+    //revives the player
+    player.revive();
+    //hides the text
+    stateText.visible = false;
+
 }
-
-
-// The keycodes that will be mapped when a user presses a button.
-KEY_CODES = {
-  32: 'space',
-  37: 'left',
-  38: 'up',
-  39: 'right',
-  40: 'down',
-}
-// creates the array to hold the KEY_CODES and sets all their values
-// to false. Checking true/flase is the quickest way to check status
-// of a key press and which one was pressed when determining
-// when to move and which direction.
-KEY_STATUS = {};
-for (code in KEY_CODES) {
-  KEY_STATUS[KEY_CODES[code]] = false;
-}
-/*
- * sets up the document to listen to onkeydown events (fired when
- * any key on the keyboard is pressed down). When a key is pressed,
- * it sets the appropriate direction to true to let us know which
- * key it was.
- */
-document.onkeydown = function(e) {
-  var keyCode = e.keyCode
-  if (KEY_CODES[keyCode]) {
-	e.preventDefault();
-	KEY_STATUS[KEY_CODES[keyCode]] = true;
-  }
-}
-/*
- * sets up the document to listen to ownkeyup events (fired when
- * any key on the keyboard is released). When a key is released,
- * it sets teh appropriate direction to false to let us know which
- * key it was.
- */
-document.onkeyup = function(e) {
-  var keyCode = e.keyCode
-  if (KEY_CODES[keyCode]) {
-    e.preventDefault();
-    KEY_STATUS[KEY_CODES[keyCode]] = false;
-  }
-}
-
-
-/*
- * finds the first API that works to optimize the animation loop, 
- * otherwise defaults to setTimeout().
- */
-window.requestAnimFrame = (function(){
-	return  window.requestAnimationFrame       || 
-			window.oRequestAnimationFrame      || 
-			function(/* function */ callback, /* DOMElement */ element){
-				window.setTimeout(callback, 1000 / 60);
-			};
-})();
