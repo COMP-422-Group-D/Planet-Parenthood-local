@@ -73,7 +73,7 @@ function create() {
     enemyBullets.setAll('checkWorldBounds', true);
 
     //  The hero!
-    player = game.add.sprite(game.world.centerX-50, game.world.centerY+240, 'ship');
+    player = game.add.sprite(game.world.centerX, game.world.centerY+240, 'ship');
     player.anchor.setTo(0.5, 0.5);
     game.physics.enable(player, Phaser.Physics.ARCADE);
 	player.body.collideWorldBounds = true;
@@ -83,7 +83,8 @@ function create() {
     buttonfire.events.onInputOver.add(function(){fire=true;});
     buttonfire.events.onInputOut.add(function(){fire=false;});
     buttonfire.events.onInputDown.add(function(){fire=true;});
-    buttonfire.events.onInputUp.add(function(){fire=false;});        
+    buttonfire.events.onInputUp.add(function(){fire=false;});       
+	buttonfire.visible = true;
 
     buttonleft = game.add.button(20, 560, 'horizontal_buttons', null, this, 0, 1, 0, 1);
     buttonleft.fixedToCamera = true;
@@ -91,6 +92,7 @@ function create() {
     buttonleft.events.onInputOut.add(function(){left=false;});
     buttonleft.events.onInputDown.add(function(){left=true;});
     buttonleft.events.onInputUp.add(function(){left=false;});
+	buttonleft.visible = true;
 	
 	buttonright = game.add.button(140, 560, 'horizontal_buttons', null, this, 0, 1, 0, 1);
     buttonright.fixedToCamera = true;
@@ -98,7 +100,7 @@ function create() {
     buttonright.events.onInputOut.add(function(){right=false;});
     buttonright.events.onInputDown.add(function(){right=true;});
     buttonright.events.onInputUp.add(function(){right=false;});
-
+	buttonright.visible = true;
 
 	//platform
 	platform = game.add.sprite(game.world.centerX, game.world.centerY+350, 'platform');
@@ -297,6 +299,9 @@ function enemyHitsPlayer (player,bullet) {
 		highscoreText.text ='Score: ' + score;
 		highscoreText.visible = true;
 		menuButton.visible = true;
+		buttonfire.visible = false;
+		buttonleft.visible = false;
+		buttonright.visible = false;
     }
 
 }
@@ -376,6 +381,10 @@ function restart () {
 	menuButton.visible = false;
 	scoreString.visible = true;
 	scoreText.visible = true;
+	
+	buttonfire.visible = true;
+	buttonleft.visible = true;
+	buttonright.visible = true;
 	
 
     //revives the player
