@@ -13,8 +13,12 @@ function preload() {
 	game.load.image('button','../media/images/retry.png');
 	game.load.image('menu_button','../media/images/menu_button.png');
 	game.load.image('platform','../media/images/invisi_plat.png');
-
-}
+	game.load.spritesheet('horizontal_buttons','../media/images/button-horizontal.png',96,64);
+	game.load.spritesheet('a_button','../media/images/button-round-a.png',96,96);
+	}
+var stick;
+var buttonA;
+var pad;
 
 var player;
 var aliens;
@@ -35,7 +39,11 @@ var livingEnemies = [];
 var platform;
 var scoreText;
 var loseText;
+
 var playButton;
+var left=false;
+var right= false;
+var fire= false;
 
 function create() {
 
@@ -65,10 +73,32 @@ function create() {
     enemyBullets.setAll('checkWorldBounds', true);
 
     //  The hero!
-    player = game.add.sprite(game.world.centerX-50, game.world.centerY+250, 'ship');
+    player = game.add.sprite(game.world.centerX-50, game.world.centerY+240, 'ship');
     player.anchor.setTo(0.5, 0.5);
     game.physics.enable(player, Phaser.Physics.ARCADE);
 	player.body.collideWorldBounds = true;
+	
+	buttonfire = game.add.button(300, 550, 'a_button', null, this, 0, 1, 0, 1);
+    buttonfire.fixedToCamera = true;
+    buttonfire.events.onInputOver.add(function(){fire=true;});
+    buttonfire.events.onInputOut.add(function(){fire=false;});
+    buttonfire.events.onInputDown.add(function(){fire=true;});
+    buttonfire.events.onInputUp.add(function(){fire=false;});        
+
+    buttonleft = game.add.button(20, 560, 'horizontal_buttons', null, this, 0, 1, 0, 1);
+    buttonleft.fixedToCamera = true;
+    buttonleft.events.onInputOver.add(function(){left=true;});
+    buttonleft.events.onInputOut.add(function(){left=false;});
+    buttonleft.events.onInputDown.add(function(){left=true;});
+    buttonleft.events.onInputUp.add(function(){left=false;});
+	
+	buttonright = game.add.button(140, 560, 'horizontal_buttons', null, this, 0, 1, 0, 1);
+    buttonright.fixedToCamera = true;
+    buttonright.events.onInputOver.add(function(){right=true;});
+    buttonright.events.onInputOut.add(function(){right=false;});
+    buttonright.events.onInputDown.add(function(){right=true;});
+    buttonright.events.onInputUp.add(function(){right=false;});
+
 
 	//platform
 	platform = game.add.sprite(game.world.centerX, game.world.centerY+350, 'platform');
@@ -167,17 +197,17 @@ function update() {
         //  Reset the player, then check for movement keys
         player.body.velocity.setTo(0, 0);
 
-        if (cursors.left.isDown)
+        if ((cursors.left.isDown) || left)
         {
             player.body.velocity.x = -200;
         }
-        else if (cursors.right.isDown)
+        else if ((cursors.right.isDown) || right)
         {
             player.body.velocity.x = 200;
         }
 
         //  Firing?
-        if (fireButton.isDown)
+        if (fireButton.isDown || fire)
         {
             fireBullet();
         }
