@@ -23,13 +23,10 @@
             {
               "xml": "<feature name=\"Media\"><param name=\"android-package\" value=\"org.apache.cordova.media.AudioHandler\" /></feature>",
               "count": 1
-<<<<<<< HEAD
-=======
             },
             {
               "xml": "<feature name=\"Camera\"><param name=\"android-package\" value=\"org.apache.cordova.camera.CameraLauncher\" /></feature>",
               "count": 1
->>>>>>> 3f3230e6ce4441e33e0065106de3dc374487d995
             }
           ]
         }
@@ -39,11 +36,7 @@
           "/*": [
             {
               "xml": "<uses-permission android:name=\"android.permission.WRITE_EXTERNAL_STORAGE\" />",
-<<<<<<< HEAD
-              "count": 2
-=======
               "count": 3
->>>>>>> 3f3230e6ce4441e33e0065106de3dc374487d995
             },
             {
               "xml": "<uses-permission android:name=\"android.permission.RECORD_AUDIO\" />",
@@ -57,15 +50,12 @@
               "xml": "<uses-permission android:name=\"android.permission.READ_PHONE_STATE\" />",
               "count": 1
             }
-<<<<<<< HEAD
-=======
           ],
           "application": [
             {
               "xml": "<provider android:authorities=\"${applicationId}.provider\" android:exported=\"false\" android:grantUriPermissions=\"true\" android:name=\"android.support.v4.content.FileProvider\"><meta-data android:name=\"android.support.FILE_PROVIDER_PATHS\" android:resource=\"@xml/provider_paths\" /></provider>",
               "count": 1
             }
->>>>>>> 3f3230e6ce4441e33e0065106de3dc374487d995
           ]
         }
       }
@@ -80,12 +70,9 @@
     },
     "cordova-plugin-media": {
       "PACKAGE_NAME": "io.cordova.hellocordova"
-<<<<<<< HEAD
-=======
     },
     "cordova-plugin-camera": {
       "PACKAGE_NAME": "io.cordova.hellocordova"
->>>>>>> 3f3230e6ce4441e33e0065106de3dc374487d995
     }
   },
   "dependent_plugins": {},
@@ -278,8 +265,6 @@
       "clobbers": [
         "window.Media"
       ]
-<<<<<<< HEAD
-=======
     },
     {
       "id": "cordova-plugin-camera.Camera",
@@ -312,17 +297,12 @@
       "clobbers": [
         "CameraPopoverHandle"
       ]
->>>>>>> 3f3230e6ce4441e33e0065106de3dc374487d995
     }
   ],
   "plugin_metadata": {
     "cordova-plugin-whitelist": "1.3.2",
     "cordova-plugin-file": "4.3.3",
-<<<<<<< HEAD
-    "cordova-plugin-media": "3.0.1"
-=======
     "cordova-plugin-media": "3.0.1",
     "cordova-plugin-camera": "2.4.1"
->>>>>>> 3f3230e6ce4441e33e0065106de3dc374487d995
   }
 }
