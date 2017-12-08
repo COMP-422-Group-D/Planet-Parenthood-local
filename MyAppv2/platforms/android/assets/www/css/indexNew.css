@@ -8,7 +8,7 @@ body {
     -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
     -webkit-user-select: none;                  /* prevent copy paste, to allow, change 'none' to 'text' */
     
-    background-image:url("../media/images/sp4.gif");
+    background-image:url("../media/images/spblack.png");
 /*    background-repeat: no-repeat;*/
    
 /*
@@ -58,9 +58,12 @@ footer.loginFooter {
     display: block;
     margin: 0 auto;
 
+    text-align: center;
+
+
 /*    text-align: center;*/
-     width:350px;
-    height:50px;
+     width:375px;
+    height:75px;
 }
 .customized{
     margin-top: 40px;
@@ -135,5 +138,10 @@ footer.loginFooter {
     margin-top:80px;
     margin-bottom: 30px;
     padding-top: 18px;
+
 /*    transform: rotate(352.49deg);*/
+}
+.PressHereToPlay{
+    text-align: center;
+    margin-top: 200px;
 }

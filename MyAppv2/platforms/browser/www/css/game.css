@@ -6,6 +6,8 @@ canvas {
 /*	background: transparent;*/
 }
 body{
+    padding-left: 0;
+    padding-top: 0;
     background-color: black;
 }
 #background {

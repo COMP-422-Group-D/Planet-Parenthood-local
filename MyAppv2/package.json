@@ -1,43 +1,45 @@
 {
-  "name": "helloworld",
-  "displayName": "HelloCordova",
-  "version": "1.0.0",
-  "description": "A sample Apache Cordova application that responds to the deviceready event.",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "Apache Cordova Team",
-  "license": "Apache-2.0",
-  "dependencies": {
-    "body-parser": "^1.18.2",
-    "connect-mongo": "^2.0.0",
-    "cordova-android": "6.3.0",
-    "cordova-browser": "^5.0.1",
-    "cordova-ios": "4.5.2",
-    "cordova-plugin-camera": "^2.4.1",
-    "cordova-plugin-media": "^3.0.1",
-    "cordova-plugin-whitelist": "^1.3.2",
-    "express": "^4.16.2",
-    "express-session": "^1.15.6",
-    "mongodb-autoincrement": "^1.0.1",
-    "mongoose": "^4.13.6",
-    "mongoose-auto-increment": "^5.0.1",
-    "serve-static": "^1.13.1"
-  },
-  "cordova": {
-    "plugins": {
-      "cordova-plugin-whitelist": {},
-      "cordova-plugin-media": {},
-      "cordova-plugin-camera": {
-        "CAMERA_USAGE_DESCRIPTION": " ",
-        "PHOTOLIBRARY_USAGE_DESCRIPTION": " "
-      }
+    "name": "helloworld",
+    "displayName": "HelloCordova",
+    "version": "1.0.0",
+    "description": "A sample Apache Cordova application that responds to the deviceready event.",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
     },
-    "platforms": [
-      "android",
-      "browser",
-      "ios"
-    ]
-  }
+    "author": "Apache Cordova Team",
+    "license": "Apache-2.0",
+    "dependencies": {
+        "body-parser": "^1.18.2",
+        "connect-mongo": "^2.0.0",
+        "cordova-android": "6.3.0",
+        "cordova-browser": "^5.0.1",
+        "cordova-ios": "4.5.2",
+        "cordova-plugin-camera": "^2.4.1",
+        "cordova-plugin-indexeddb": "^0.1.2",
+        "cordova-plugin-media": "^3.0.1",
+        "cordova-plugin-whitelist": "^1.3.2",
+        "express": "^4.16.2",
+        "express-session": "^1.15.6",
+        "mongodb-autoincrement": "^1.0.1",
+        "mongoose": "^4.13.6",
+        "mongoose-auto-increment": "^5.0.1",
+        "serve-static": "^1.13.1"
+    },
+    "cordova": {
+        "plugins": {
+            "cordova-plugin-whitelist": {},
+            "cordova-plugin-media": {},
+            "cordova-plugin-camera": {
+                "CAMERA_USAGE_DESCRIPTION": " ",
+                "PHOTOLIBRARY_USAGE_DESCRIPTION": " "
+            },
+            "cordova-plugin-indexedDB": {}
+        },
+        "platforms": [
+            "android",
+            "browser",
+            "ios"
+        ]
+    }
 }

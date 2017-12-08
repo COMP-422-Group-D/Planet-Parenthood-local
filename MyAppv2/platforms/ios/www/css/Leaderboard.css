@@ -40,7 +40,7 @@ body {
 
 .header{
     
-    background-image:url("../media/images/sp4.gif");
+    background-image:url("../media/images/spblack.png");
 /*
   background-color: rgb(157, 34, 60);
   background-image: -webkit-linear-gradient(135deg, rgb(114, 51, 98), rgb(157, 34, 60));
@@ -51,9 +51,9 @@ body {
 */
   color: rgb(255,255,255);
   display: block;
-  font-size: 1.2rem;
-  font-weight: 500;
-        height: 60px;
+   font-size: .85rem;
+  font-weight: 700;
+        height: 70px;
         letter-spacing: .5rem;
         line-height: 50px;
         text-shadow: 0 1px 1px rgba(0,0,0,.1);
@@ -66,11 +66,17 @@ body {
 .header .headerLabel{
 	text-align: center;
 	border: 15px;
-	
+	  font-size: 1.3rem;
+
 	
 }
 
-
+p {
+    padding-top: 10px;
+  font-size: 1.3rem;
+  line-height: 50px;
+  text-align: center;
+}
 .card-body{
 	width:90px;
     padding-top: 7px;
@@ -81,7 +87,7 @@ body {
 .card{
     
 /*    background:url(../media/images/spacebackground.jpg);*/
-    background-color: white;
+    background-color: lightgrey;
     border:none;
     margin-right: 100%;
 	text-align: left;
@@ -108,10 +114,16 @@ body {
 	border-style: solid;
 	border-color: black;
 	border-width: 1px;
+    background-color: lightgrey;
 	margin-top: 8px;
     margin-left: 15px;
     margin-right: 15px;
 	padding: 3px;
+     height:80%;
+    position: relative;
+    top: 20px;
+    
+
 }
 
 
@@ -119,6 +131,7 @@ body {
     
 font-weight: normal !important;
  display: block;
+ height:60%;
 	
 
 

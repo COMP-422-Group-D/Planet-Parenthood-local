@@ -9,7 +9,7 @@ function preload() {
     game.load.image('ship', '../media/images/ship.png');
 	game.load.image('ship_lives', '../media/images/ship_lives.png');
     game.load.spritesheet('kaboom', '../media/images/explosion.png', 128, 128);
-    game.load.image('starfield', '../media/images/background.png');
+    game.load.image('starfield', '../media/images/spblack.png');
 	game.load.image('button','../media/images/retry.png');
 	game.load.image('menu_button','../media/images/menu_button.png');
 	game.load.image('platform','../media/images/invisi_plat.png');

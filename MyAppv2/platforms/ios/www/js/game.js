@@ -9,12 +9,16 @@ function preload() {
     game.load.image('ship', '../media/images/ship.png');
 	game.load.image('ship_lives', '../media/images/ship_lives.png');
     game.load.spritesheet('kaboom', '../media/images/explosion.png', 128, 128);
-    game.load.image('starfield', '../media/images/background.png');
+    game.load.image('starfield', '../media/images/spblack.png');
 	game.load.image('button','../media/images/retry.png');
 	game.load.image('menu_button','../media/images/menu_button.png');
-
-
-}
+	game.load.image('platform','../media/images/invisi_plat.png');
+	game.load.spritesheet('horizontal_buttons','../media/images/button-horizontal.png',96,64);
+	game.load.spritesheet('a_button','../media/images/button-round-a.png',96,96);
+	}
+var stick;
+var buttonA;
+var pad;
 
 var player;
 var aliens;
@@ -32,10 +36,14 @@ var enemyBullet;
 var firingTimer = 0;
 var stateText;
 var livingEnemies = [];
-
+var platform;
 var scoreText;
 var loseText;
+
 var playButton;
+var left=false;
+var right= false;
+var fire= false;
 
 function create() {
 
@@ -65,15 +73,44 @@ function create() {
     enemyBullets.setAll('checkWorldBounds', true);
 
     //  The hero!
-    player = game.add.sprite(game.world.centerX-50, game.world.centerY+250, 'ship');
+    player = game.add.sprite(game.world.centerX, game.world.centerY+240, 'ship');
     player.anchor.setTo(0.5, 0.5);
     game.physics.enable(player, Phaser.Physics.ARCADE);
 	player.body.collideWorldBounds = true;
+	
+	buttonfire = game.add.button(300, 550, 'a_button', null, this, 0, 1, 0, 1);
+    buttonfire.fixedToCamera = true;
+    buttonfire.events.onInputOver.add(function(){fire=true;});
+    buttonfire.events.onInputOut.add(function(){fire=false;});
+    buttonfire.events.onInputDown.add(function(){fire=true;});
+    buttonfire.events.onInputUp.add(function(){fire=false;});       
+	buttonfire.visible = true;
 
+    buttonleft = game.add.button(20, 560, 'horizontal_buttons', null, this, 0, 1, 0, 1);
+    buttonleft.fixedToCamera = true;
+    buttonleft.events.onInputOver.add(function(){left=true;});
+    buttonleft.events.onInputOut.add(function(){left=false;});
+    buttonleft.events.onInputDown.add(function(){left=true;});
+    buttonleft.events.onInputUp.add(function(){left=false;});
+	buttonleft.visible = true;
+	
+	buttonright = game.add.button(140, 560, 'horizontal_buttons', null, this, 0, 1, 0, 1);
+    buttonright.fixedToCamera = true;
+    buttonright.events.onInputOver.add(function(){right=true;});
+    buttonright.events.onInputOut.add(function(){right=false;});
+    buttonright.events.onInputDown.add(function(){right=true;});
+    buttonright.events.onInputUp.add(function(){right=false;});
+	buttonright.visible = true;
+
+	//platform
+	platform = game.add.sprite(game.world.centerX, game.world.centerY+350, 'platform');
+    platform.anchor.setTo(0.5, 0.5);
+    game.physics.enable(platform, Phaser.Physics.ARCADE);
 
     aliens = game.add.group();
     aliens.enableBody = true;
     aliens.physicsBodyType = Phaser.Physics.ARCADE;
+
 
     createAliens();
 
@@ -123,16 +160,16 @@ function createAliens () {
     {
         for (var x = 0; x < 8; x++)
         {
-            var alien = aliens.create(x * 35, y * 60, 'invader');
-            alien.anchor.setTo(2, 0.5);
+            var alien = aliens.create(x * 43, y * 60, 'invader');
+            alien.anchor.setTo(1.9, 0.5);
         }
     }
 
-    aliens.x = 100;
+    aliens.x = 110;
     aliens.y = 50;
 
     //  All this does is basically start the invaders moving. Notice we're moving the Group they belong to, rather than the invaders directly.
-    var tween = game.add.tween(aliens).to( { x: 200 }, 2000, Phaser.Easing.Linear.None, true, 0, 1000, true);
+    var tween = game.add.tween(aliens).to( { x: 175 }, 2000, Phaser.Easing.Linear.None, true, 0, 1000, true);
 
     //  When the tween loops it calls descend
     tween.onRepeat.add(descend, this);
@@ -162,17 +199,17 @@ function update() {
         //  Reset the player, then check for movement keys
         player.body.velocity.setTo(0, 0);
 
-        if (cursors.left.isDown)
+        if ((cursors.left.isDown) || left)
         {
             player.body.velocity.x = -200;
         }
-        else if (cursors.right.isDown)
+        else if ((cursors.right.isDown) || right)
         {
             player.body.velocity.x = 200;
         }
 
         //  Firing?
-        if (fireButton.isDown)
+        if (fireButton.isDown || fire)
         {
             fireBullet();
         }
@@ -181,10 +218,14 @@ function update() {
         {
             enemyFires();
         }
-
+		if (aliens.y > 650) {
+			aliens.kill();
+		}
         //  Run collision
         game.physics.arcade.overlap(bullets, aliens, collisionHandler, null, this);
         game.physics.arcade.overlap(enemyBullets, player, enemyHitsPlayer, null, this);
+		game.physics.arcade.overlap(aliens, player, enemyHitsPlayer, null, this);
+		game.physics.arcade.overlap(platform,aliens, outOfBoundsHandler, null, this);
     }
 
 }
@@ -221,6 +262,15 @@ function collisionHandler (bullet, alien) {
 
 }
 
+function outOfBoundsHandler (alien, platform) {
+    platform.kill();
+	
+    if (aliens.countLiving() == 0)
+    {
+        createAliens();
+    }
+
+}
 function enemyHitsPlayer (player,bullet) {
     
     bullet.kill();
@@ -249,6 +299,9 @@ function enemyHitsPlayer (player,bullet) {
 		highscoreText.text ='Score: ' + score;
 		highscoreText.visible = true;
 		menuButton.visible = true;
+		buttonfire.visible = false;
+		buttonleft.visible = false;
+		buttonright.visible = false;
     }
 
 }
@@ -275,7 +328,7 @@ function enemyFires () {
         // randomly select one of them
         var shooter=livingEnemies[random];
         // And fire the bullet from this enemy
-        enemyBullet.reset(shooter.body.x, shooter.body.y);
+        enemyBullet.reset(shooter.body.x+40, shooter.body.y+50);
 
         game.physics.arcade.moveToObject(enemyBullet,player,120);
         firingTimer = game.time.now + 2000;
@@ -328,6 +381,10 @@ function restart () {
 	menuButton.visible = false;
 	scoreString.visible = true;
 	scoreText.visible = true;
+	
+	buttonfire.visible = true;
+	buttonleft.visible = true;
+	buttonright.visible = true;
 	
 
     //revives the player
