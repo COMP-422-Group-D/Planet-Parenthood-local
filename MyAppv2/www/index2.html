@@ -38,28 +38,77 @@
 		<link rel="stylesheet" type="text/css" href="bs/css/bootstrap.min.css">
 		<link rel="stylesheet" type="text/css" href="bs/css/bootstrap-grid.min.css">
          <link rel="stylesheet" type="text/css" href="css/indexNew.css">
-        <title>Home</title>
+        <title>Login</title>
       
     </head>
 	
 	
 	
     <body>
-        <a href="html/menu.html"><div class="container-fluid ">
+        <div class="container-fluid ">
     		<div>
-				<img class="login-image" src="media/images/8-bitlogo-trans.png">
+				<img class="login-image" src="media/images/logo8.png">
 			</div>
 <!--            <div class="white_labels "> Planet Parenthood</div>-->
-            <img class="game-name" src="media/images/8-bitname3.png"> 
+            <img class="game-name" src="media/images/game_name.png"> 
+
+                    <br> <br>
+                    <div class="login">
+			<form method="post" action="html/menu.html" name='login' class="form-group">
+                        
+				<p><input type="text" name="login" value="" placeholder="Username or Email"></p>
+				<p><input type="password" name="password" value="" placeholder="Password"></p>
+				<p class="remember_me">
+					<label>
+						<input type="checkbox" name="remember_me" id="remember_me">
+							Remember me on this Device
+					</label>
+				</p>
+				<p class="submit"><input type="submit" name="commit" onclick="check(this.form)" value="login"></p>
+
+	<!--
+					<div class = "box" >
+				<a class= "button" style="widtth: 200%"; href="game.html" >Start Game</a>
+			</div>
+	-->
+
+                
+			</form>
+
+            </div>
+			
+			<div class="login-help">
+			<a href="html/register.html">Create an Account</a>
+			</div>
+
+            <div class="login-help">
+			<a href="html/menu.html">Go to menu</a>
+			</div>
+
 
             
-			<img class="PressHereToPlay" src="media/images/TaptoPlay3.png">
+		</div>
+<!--
+                        <div data-role="page">
 
+                <div data-role="header">
+-->
 
-
-            
-            </div></a>
-
+               
+			<script language="javascript">
+				function loginf(form)
+				{
+					if(form.log.value == "login" && form.pass.value == "pass")
+					{
+						window.location('html/menu.html')
+					}
+					else
+					{
+						alert("Incorrect Username or Password")/*displays error message*/
+					}
+				}
+                     
+            </script>
 			
 			
 			
