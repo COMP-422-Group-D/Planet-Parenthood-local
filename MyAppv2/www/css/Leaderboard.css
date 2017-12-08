@@ -109,7 +109,12 @@ p {
     color:#ffa749;
     font-weight:bold;
 }
-
+#whoPlaysMessage {
+	position: fixed;
+    bottom: 50px;
+    left: 250px;
+    font-weight: bold;
+}
 .MasterContainer{
 	border-style: solid;
 	border-color: black;

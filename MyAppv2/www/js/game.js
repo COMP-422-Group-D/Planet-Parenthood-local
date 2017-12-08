@@ -2,14 +2,16 @@
 var game = new Phaser.Game(400, 650, Phaser.AUTO, 'phaser-example', { preload: preload, create: create, update: update, render: render });
 
 function preload() {
-
     game.load.image('bullet', '../media/images/bullet.png');
     game.load.image('enemyBullet', '../media/images/enemy_bullet.png');
     game.load.image('invader', '../media/images/enemy.png');
+	game.load.image('boss', '../media/images/fetus.png');
     game.load.image('ship', '../media/images/ship.png');
+	//game.load.image('shield', '../media/images/shield.png');
 	game.load.image('ship_lives', '../media/images/ship_lives.png');
     game.load.spritesheet('kaboom', '../media/images/explosion.png', 128, 128);
-    game.load.image('starfield', '../media/images/spblack.png');
+    game.load.image('starfield', '../media/images/background.png');
+	game.load.image('game_over', '../media/images/game_over.png');
 	game.load.image('button','../media/images/retry.png');
 	game.load.image('menu_button','../media/images/menu_button.png');
 	game.load.image('platform','../media/images/invisi_plat.png');
@@ -21,7 +23,12 @@ var buttonA;
 var pad;
 
 var player;
+var shield;
 var aliens;
+
+var bosses;
+var bossBullets;
+
 var bullets;
 var bulletTime = 0;
 var cursors;
@@ -39,6 +46,7 @@ var livingEnemies = [];
 var platform;
 var scoreText;
 var loseText;
+var gameOverScreen;
 
 var playButton;
 var left=false;
@@ -111,9 +119,13 @@ function create() {
     aliens.enableBody = true;
     aliens.physicsBodyType = Phaser.Physics.ARCADE;
 
+	createAliens();
+  
 
-    createAliens();
-
+	/*bosses = game.add.group();
+    bosses.enableBody = true;
+    bosses.physicsBodyType = Phaser.Physics.ARCADE;
+	*/
     //  The score
     scoreString = 'Score : ';
     scoreText = game.add.text(0, 0, scoreString + score, { font: '32px Verdana', fill: '#fff' });
@@ -122,7 +134,10 @@ function create() {
     lives = game.add.group();
     game.add.text(game.world.width - 125, 0, 'Lives : ', { font: '32px Verdana', fill: '#fff' });
 
-	loseText = game.add.text(game.world.centerX-100, game.world.centerY-100, 'You are dead!',{font: '32px Verdana',fill: '#ff0000'});
+	gameOverScreen = game.add.image(game.world.centerX-110, game.world.centerY-120,'game_over');
+	gameOverScreen.visible = false;; 
+	
+	loseText = game.add.text(game.world.centerX-80, game.world.centerY-100, 'You are dead!',{font: '32px Verdana',fill: '#ff0000'});
 	loseText.visible = false;
 		
 	highscoreText= game.add.text(game.world.centerX-60, game.world.centerY-40, 'Score: ',{font: '32px Verdana',fill: '#fff' });
@@ -173,8 +188,22 @@ function createAliens () {
 
     //  When the tween loops it calls descend
     tween.onRepeat.add(descend, this);
-}
+}/*
+function createBoss() {
 
+    var boss = bosses.create(x * 43, y * 60, 'boss');
+    boss.anchor.setTo(1.9, 0.5);
+
+    bosses.x = 110;
+    bosses.y = 50;
+
+    //  All this does is basically start the invaders moving. Notice we're moving the Group they belong to, rather than the invaders directly.
+    var tween = game.add.tween(bosses).to( { x: 175 }, 2000, Phaser.Easing.Linear.None, true, 0, 1000, true);
+
+    //  When the tween loops it calls descend
+    tween.onRepeat.add(descend, this);
+}
+*/
 function setupInvader (invader) {
 
     invader.anchor.x = 0.5;
@@ -292,10 +321,12 @@ function enemyHitsPlayer (player,bullet) {
     {
         player.kill();
         enemyBullets.callAll('kill');
+		gameOverScreen.visible = true;
 		scoreString.visible = false;
 		scoreText.visible = false;
 		loseText.visible = true;
 		playButton.visible= true;
+		indexedDBHighscore(score);
 		highscoreText.text ='Score: ' + score;
 		highscoreText.visible = true;
 		menuButton.visible = true;
@@ -374,7 +405,7 @@ function restart () {
     //  And brings the aliens back from the dead :)
     aliens.removeAll();
     createAliens();
-	
+	gameOverScreen.visible= false;
 	loseText.visible = false;
 	highscoreText.visible = false;
 	playButton.visible = false;
