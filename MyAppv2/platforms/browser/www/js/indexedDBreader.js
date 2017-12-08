@@ -28,7 +28,7 @@ function getData() {
    
     var myScore = objectStoreRequest.result.score;
 	var myRating = objectStoreRequest.result.rating;
-	$("#whoPlaysMessage").html("Score: "+myScore+"        Rating: "+myRating);
+	$("#whoPlaysMessage").html("Score: "+myScore+"Rating: "+myRating);
 	
 	console.log(myRecord);
   };
