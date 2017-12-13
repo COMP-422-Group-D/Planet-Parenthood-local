@@ -1,5 +1,6 @@
 
 var game = new Phaser.Game(400, 650, Phaser.AUTO, 'phaser-example', { preload: preload, create: create, update: update, render: render });
+var swooshSound;
 
 function preload() {
     game.load.image('bullet', '../media/images/bullet.png');
@@ -240,6 +241,8 @@ function update() {
         //  Firing?
         if (fireButton.isDown || fire)
         {
+			swooshSound = new sound("../media/audio/throw.wav");
+			swooshSound.play();
             fireBullet();
         }
 
@@ -423,4 +426,19 @@ function restart () {
     //hides the text
     stateText.visible = false;
 
+}
+// Taken from https://stackoverflow.com/questions/9419263/playing-audio-with-javascript
+function sound(src) {
+    this.sound = document.createElement("audio");
+    this.sound.src = src;
+    this.sound.setAttribute("preload", "loop");
+    this.sound.setAttribute("controls", "none");
+    this.sound.style.display = "none";
+    document.body.appendChild(this.sound);
+    this.play = function() {
+        this.sound.play();
+    }
+    this.stop = function() {
+        this.sound.pause();
+    }
 }
