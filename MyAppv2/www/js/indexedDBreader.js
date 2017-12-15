@@ -2,7 +2,7 @@ var db;
 var indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || window.shimIndexedDB;
 
 
-var DBOpenRequest = window.indexedDB.open("MyDatabase", 1);
+var DBOpenRequest = window.indexedDB.open("gameDatabase", 1);
 
 DBOpenRequest.onsuccess = function(event) {
 
@@ -16,10 +16,10 @@ DBOpenRequest.onsuccess = function(event) {
 
 function getData() {
   // open a read/write db transaction, ready for retrieving the data
-  var transaction = db.transaction(["MyObjectStore"], "readwrite");
+  var transaction = db.transaction(["myobjectStore"], "readwrite");
 
   // create an object store on the transaction
-  var objectStore = transaction.objectStore("MyObjectStore");
+  var objectStore = transaction.objectStore("myobjectStore");
 
   // Make a request to get a record by key from the object store
   var objectStoreRequest = objectStore.get(1);

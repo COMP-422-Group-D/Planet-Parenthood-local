@@ -1,22 +1,12 @@
-function indexedDBHighscore(highScore){
-	var db;
-	var indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || window.shimIndexedDB;
-
-	// Open (or create) the database
-	var open = indexedDB.open("MyDatabase", 1);
-
-	// Create the schema
-	open.onupgradeneeded = function() {
-		var db = open.result;
-		var store = db.createObjectStore("MyObjectStore", {keyPath: "id"});
+function indexedDBHighscore(highScore){var req = window.indexedDB.open("gameDatabase", 1), db;
+	req.onerror=function(e){console.log('Error')};
+	req.onsuccess = function(e){db=e.target.result;};
+	req.onupgradeneeded = function(e){
+    var db = e.target.result;
+		var store = db.createObjectStore("myobjectStore", {keyPath: "id"});
 	  
-	};
-
-	open.onsuccess = function() {
-		// Start a new transaction
-		var db = open.result;
-		var tx = db.transaction("MyObjectStore", "readwrite");
-		var store = tx.objectStore("MyObjectStore");
+		var tx = e.target.transaction;
+		var store = tx.objectStore("myobjectStore");
 		
 
 		// Add some data
@@ -29,11 +19,4 @@ function indexedDBHighscore(highScore){
 		getUserData.onsuccess = function() {
 			console.log(getUserData.result.score);  
 		};
-
-		// Close the db when the transaction is done
-		tx.oncomplete = function() {
-			db.close();
-		};
-		console.log(store);
-	}
-}
+}}

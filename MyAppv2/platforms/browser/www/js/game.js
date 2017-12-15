@@ -238,12 +238,12 @@ function setupInvader (invader) {
 
 function descend() {
 
-    aliens.y += 15;
+    aliens.y += 13;
 
 }
 function descendBoss() {
 
-    bosses.y += 20;
+    bosses.y += 15;
 
 }
 function update() {
@@ -455,7 +455,7 @@ function bossFires () {
         bossBullet.reset(shooter.body.x+40, shooter.body.y+50);
 
         game.physics.arcade.moveToObject(bossBullet,player,120);
-        firingTimer = game.time.now + 2500;
+        firingTimer = game.time.now + 2200;
     }
 
 }

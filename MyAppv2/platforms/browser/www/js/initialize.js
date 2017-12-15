@@ -1,7 +1,7 @@
-function indexedDBHighscore(highScore){var req = window.indexedDB.open("gameDatabase", 1), db;
-	req.onerror=function(e){console.log('Error')};
-	req.onsuccess = function(e){db=e.target.result;};
-	req.onupgradeneeded = function(e){
+function go(){var req = window.indexedDB.open("gameDatabase", 1), db;
+req.onerror=function(e){console.log('Error')};
+req.onsuccess = function(e){db=e.target.result;};
+req.onupgradeneeded = function(e){
     var db = e.target.result;
 		var store = db.createObjectStore("myobjectStore", {keyPath: "id"});
 	  
@@ -10,7 +10,7 @@ function indexedDBHighscore(highScore){var req = window.indexedDB.open("gameData
 		
 
 		// Add some data
-		store.put({"id": 1, "rating": "soldier", "score": highScore});
+		store.put({"id": 1, "rating": "soldier", "score": 0});
 		
 		
 		// Query the data
@@ -20,3 +20,4 @@ function indexedDBHighscore(highScore){var req = window.indexedDB.open("gameData
 			console.log(getUserData.result.score);  
 		};
 }}
+go();
