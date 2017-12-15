@@ -5,6 +5,7 @@ var swooshSound;
 function preload() {
     game.load.image('bullet', '../media/images/bullet.png');
     game.load.image('enemyBullet', '../media/images/enemy_bullet.png');
+	game.load.image('bossBullet', '../media/images/boss_shot.png');
     game.load.image('invader', '../media/images/enemy.png');
 	game.load.image('boss', '../media/images/fetus.png');
     game.load.image('ship', '../media/images/ship.png');
@@ -29,6 +30,7 @@ var aliens;
 
 var bosses;
 var bossBullets;
+var bossLives;
 
 var bullets;
 var bulletTime = 0;
@@ -44,6 +46,7 @@ var enemyBullet;
 var firingTimer = 0;
 var stateText;
 var livingEnemies = [];
+var livingBosses= [];
 var platform;
 var scoreText;
 var loseText;
@@ -80,6 +83,16 @@ function create() {
     enemyBullets.setAll('anchor.y', 1);
     enemyBullets.setAll('outOfBoundsKill', true);
     enemyBullets.setAll('checkWorldBounds', true);
+	
+	// The boss's bullets
+    bossBullets = game.add.group();
+    bossBullets.enableBody = true;
+    bossBullets.physicsBodyType = Phaser.Physics.ARCADE;
+    bossBullets.createMultiple(30, 'bossBullet');
+    bossBullets.setAll('anchor.x', 0.5);
+    bossBullets.setAll('anchor.y', 1);
+    bossBullets.setAll('outOfBoundsKill', true);
+    bossBullets.setAll('checkWorldBounds', true);
 
     //  The hero!
     player = game.add.sprite(game.world.centerX, game.world.centerY+240, 'ship');
@@ -119,7 +132,16 @@ function create() {
     aliens = game.add.group();
     aliens.enableBody = true;
     aliens.physicsBodyType = Phaser.Physics.ARCADE;
-
+	
+	bosses = game.add.group();
+    bosses.enableBody = true;
+    bosses.physicsBodyType = Phaser.Physics.ARCADE;
+	bossLives = game.add.group();
+	for (var i = 0; i < 18; i++) 
+    {
+        var boss = bossLives.create(100, 800, 'ship_lives');
+        
+    }
 	createAliens();
   
 
@@ -189,22 +211,23 @@ function createAliens () {
 
     //  When the tween loops it calls descend
     tween.onRepeat.add(descend, this);
-}/*
+}
 function createBoss() {
-
-    var boss = bosses.create(x * 43, y * 60, 'boss');
+	var x = 1;
+	var y = 1;
+    var boss = bosses.create(x * 200, y * 60, 'boss');
     boss.anchor.setTo(1.9, 0.5);
 
     bosses.x = 110;
     bosses.y = 50;
 
     //  All this does is basically start the invaders moving. Notice we're moving the Group they belong to, rather than the invaders directly.
-    var tween = game.add.tween(bosses).to( { x: 175 }, 2000, Phaser.Easing.Linear.None, true, 0, 1000, true);
+    var tween = game.add.tween(bosses).to( { x: 340 }, 2000, Phaser.Easing.Linear.None, true, 0, 1000, true);
 
     //  When the tween loops it calls descend
-    tween.onRepeat.add(descend, this);
+    tween.onRepeat.add(descendBoss, this);
 }
-*/
+
 function setupInvader (invader) {
 
     invader.anchor.x = 0.5;
@@ -215,10 +238,14 @@ function setupInvader (invader) {
 
 function descend() {
 
-    aliens.y += 10;
+    aliens.y += 13;
 
 }
+function descendBoss() {
 
+    bosses.y += 15;
+
+}
 function update() {
 
     //  Scroll the background
@@ -249,14 +276,18 @@ function update() {
         if (game.time.now > firingTimer)
         {
             enemyFires();
+			bossFires();
         }
-		if (aliens.y > 650) {
+		if (aliens.y > 650 || bosses.y> 650) {
 			aliens.kill();
+			bosses.kill();
 		}
         //  Run collision
         game.physics.arcade.overlap(bullets, aliens, collisionHandler, null, this);
         game.physics.arcade.overlap(enemyBullets, player, enemyHitsPlayer, null, this);
+		game.physics.arcade.overlap(bossBullets, player, enemyHitsPlayer, null, this);
 		game.physics.arcade.overlap(aliens, player, enemyHitsPlayer, null, this);
+		game.physics.arcade.overlap( bosses, bullets, playerHitsBoss, null, this);
 		game.physics.arcade.overlap(platform,aliens, outOfBoundsHandler, null, this);
     }
 
@@ -289,7 +320,11 @@ function collisionHandler (bullet, alien) {
     if (aliens.countLiving() == 0)
     {
         score += 1000;
-        createAliens();
+		for (var i = 0; i < 18; i++) 
+		{
+			var boss = bossLives.create(100, 800, 'ship_lives');
+		}
+        createBoss();
     }
 
 }
@@ -329,13 +364,39 @@ function enemyHitsPlayer (player,bullet) {
 		scoreText.visible = false;
 		loseText.visible = true;
 		playButton.visible= true;
+		
 		indexedDBHighscore(score);
 		highscoreText.text ='Score: ' + score;
+		
 		highscoreText.visible = true;
 		menuButton.visible = true;
 		buttonfire.visible = false;
 		buttonleft.visible = false;
 		buttonright.visible = false;
+    }
+
+}
+function playerHitsBoss (boss,bullet) {
+    
+    bullet.kill();
+    bLives = bossLives.getFirstAlive();
+
+    if (bLives)
+    {
+        bLives.kill();
+    }
+
+    //  And create an explosion :)
+    var explosion = explosions.getFirstExists(false);
+    explosion.reset(boss.body.x+70, boss.body.y+80);
+    explosion.play('kaboom', 30, false, true);
+
+    // When the boss dies
+    if (bossLives.countLiving() < 1)
+    {
+		score += 3000;
+        boss.kill();
+		createAliens();
     }
 
 }
@@ -369,6 +430,36 @@ function enemyFires () {
     }
 
 }
+function bossFires () {
+
+    //  Grab the first bullet we can from the pool
+    bossBullet = bossBullets.getFirstExists(false);
+
+    livingBosses.length=0;
+
+    bosses.forEachAlive(function(alien){
+
+        // put every living enemy in an array
+        livingBosses.push(alien);
+    });
+
+
+    if (bossBullet && livingBosses.length > 0)
+    {
+        
+        var random=game.rnd.integerInRange(0,livingBosses.length-1);
+
+        // randomly select one of them
+        var shooter=livingBosses[random];
+        // And fire the bullet from this enemy
+        bossBullet.reset(shooter.body.x+40, shooter.body.y+50);
+
+        game.physics.arcade.moveToObject(bossBullet,player,120);
+        firingTimer = game.time.now + 2200;
+    }
+
+}
+
 
 function fireBullet () {
 
@@ -407,6 +498,7 @@ function restart () {
     lives.callAll('revive');
     //  And brings the aliens back from the dead :)
     aliens.removeAll();
+	bosses.removeAll();
     createAliens();
 	gameOverScreen.visible= false;
 	loseText.visible = false;
